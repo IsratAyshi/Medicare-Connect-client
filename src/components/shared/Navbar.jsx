@@ -20,8 +20,8 @@ export default function Navbar() {
     const menuItems = [
         { name: "Home", href: "/", isActive: true },
         { name: "Find Doctors", href: "/api/all-doctors" },
-        { name: "About Us", href: "#" },
-        { name: "Contact Us", href: "#" },
+        { name: "About Us", href: "#about" },
+        { name: "Contact Us", href: "#footer" },
         // { name: "Dashboard", href: "#" }
     ];
 
