@@ -58,6 +58,7 @@ export default function LoginForm({ redirectTo = "/" }) {
             setEmail("");
             setPassword("");
 
+            router.refresh();
             router.push(redirectTo);
         } catch (err) {
             console.error(err);
@@ -100,17 +101,17 @@ export default function LoginForm({ redirectTo = "/" }) {
                 <form onSubmit={handleSignin} className="flex flex-col gap-5 mt-4">
 
                     {/* Email Input Field */}
-                    <TextField isRequired name="email" type="email" className="flex flex-col gap-1.5">
+                    <TextField isRequired name="email" type="email" className="flex flex-col gap-1.5 ">
                         <Label className="text-xs font-[700] uppercase tracking-wider text-[#00234a]/70 dark:text-white/70">
                             Email Address
                         </Label>
-                        <InputGroup className="flex items-center gap-2 border border-[#c2c6d3]/60 dark:border-white/10 rounded-xl px-3 bg-zinc-50/50 dark:bg-[#001f42] focus-within:border-[#0052ad] transition-colors">
+                        <InputGroup className="flex items-center gap-2 border border-[#c2c6d3]/60 dark:border-white/10 rounded-xl px-3 bg-[#f8f9ff] dark:bg-blue-900 focus-within:border-[#0052ad] transition-colors">
                             <At className="text-zinc-400 dark:text-zinc-500 shrink-0" size={16} />
                             <Input
                                 placeholder="sarah@example.com"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                className="w-full bg-transparent py-2.5 text-[15px] font-[500] outline-none border-none text-[#00234a] dark:text-[#fff]"
+                                className="w-full bg-transparent py-2.5 text-[15px] font-[500] outline-none border-none text-[#00234a] dark:text-[#fff] shadow-none"
                             />
                         </InputGroup>
                     </TextField>
@@ -120,14 +121,14 @@ export default function LoginForm({ redirectTo = "/" }) {
                         <Label className="text-xs font-[700] uppercase tracking-wider text-[#00234a]/70 dark:text-white/70">
                             Password
                         </Label>
-                        <InputGroup className="flex items-center gap-2 border border-[#c2c6d3]/60 dark:border-white/10 rounded-xl px-3 bg-zinc-50/50 dark:bg-[#001f42] focus-within:border-[#0052ad] transition-colors">
+                        <InputGroup className="flex items-center gap-2 border border-[#c2c6d3]/60 dark:border-white/10 rounded-xl px-3 bg-[#f8f9ff] dark:bg-blue-900 focus-within:border-[#0052ad] transition-colors">
                             <ShieldKeyhole className="text-zinc-400 dark:text-zinc-500 shrink-0" size={16} />
                             <Input
                                 type={isVisible ? "text" : "password"}
                                 placeholder="••••••••"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                className="w-full bg-transparent py-2.5 text-[15px] font-[500] outline-none border-none text-[#00234a] dark:text-[#fff]"
+                                className="w-full bg-transparent py-2.5 text-[15px] font-[500] outline-none border-none text-[#00234a] dark:text-[#fff] shadow-none"
                             />
                             <button
                                 type="button"
