@@ -92,12 +92,14 @@ export default function Navbar() {
                             </Button>
                         </Link>
 
-                        <Button
-                            href="#"
-                            className="bg-[#003f83] dark:bg-[#b7ceff] text-white dark:text-[#003f83] font-hanken text-[14px] font-[700] rounded-lg px-6 h-[42px] hover:opacity-90 shadow-sm transition-all duration-200"
-                        >
-                            Register
-                        </Button>
+                        <Link href="/auth/register">
+                            <Button
+
+                                className="bg-[#003f83] dark:bg-[#b7ceff] text-white dark:text-[#003f83] font-hanken text-[14px] font-[700] rounded-lg px-6 h-[42px] hover:opacity-90 shadow-sm transition-all duration-200"
+                            >
+                                Register
+                            </Button>
+                        </Link>
                     </div>
                 </div>
 
