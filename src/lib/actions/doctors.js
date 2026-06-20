@@ -14,3 +14,7 @@ export const updateDoctorProfile = async (userId, updatedProfileData) => {
 
     return serverMutation('/api/doctors', payload, 'POST');
 }
+
+export const updateDoctorSchedule = async (userId, scheduleData) => {
+    return serverMutation(`/api/doctors/schedule/${userId}`, scheduleData, 'PATCH');
+};

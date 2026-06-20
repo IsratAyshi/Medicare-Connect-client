@@ -52,6 +52,8 @@ export default function DoctorProfileEditor({ user, existingProfile }) {
             return;
         }
 
+        const rawProfileImage = formData.get('profileImage');
+
         const updatedProfileData = {
             doctorName: user?.name || "Medical Specialist",
             specialization,
@@ -59,21 +61,39 @@ export default function DoctorProfileEditor({ user, existingProfile }) {
             experience: parseInt(experience, 10),
             consultationFee: parseFloat(consultationFee),
             hospitalName,
-            profileImage: profileImage || user?.image || '',
-            availableDays: profile?.availableDays || ['Monday', 'Wednesday', 'Friday'],
-            availableSlots: profile?.availableSlots || ['10:30 AM', '02:00 PM'],
+            profileImage: rawProfileImage.trim() !== '' ? rawProfileImage : (profile?.profileImage || user?.image || ''),
+            availableDays: profile?.availableDays || [],
+            availableSlots: profile?.availableSlots || [],
             verificationStatus: profile?.verificationStatus || 'Pending'
         };
 
         try {
             const payload = await updateDoctorProfile(user?.id, updatedProfileData);
-            if (payload.success || payload.insertedId || payload.modifiedCount) {
-                setProfile({ ...updatedProfileData, _id: payload.insertedId || profile?._id });
+
+            // FIX: Broaden the check to capture MongoDB native response objects safely
+            const isSuccess = payload?.success ||
+                payload?.acknowledged ||
+                payload?.modifiedCount > 0 ||
+                payload?.upsertedCount > 0 ||
+                payload?.matchedCount > 0;
+
+            if (isSuccess) {
+                // Keep existing document ID or extract the newly generated one from MongoDB's upsertedId payload properties
+                const savedId = payload?.insertedId || payload?.upsertedId || profile?._id;
+
+                setProfile({
+                    ...updatedProfileData,
+                    _id: savedId
+                });
+
                 toast.success("Professional credentials saved successfully!");
                 setErrors({});
-                setIsEditing(false);
+                setIsEditing(false); // Flipping this back to false updates the UI instantly
+            } else {
+                toast.error("No changes were made to your profile details.");
             }
         } catch (err) {
+            console.error("Form submission failure:", err);
             toast.error("Could not save professional records.");
         }
     };
@@ -81,7 +101,7 @@ export default function DoctorProfileEditor({ user, existingProfile }) {
     // --- VIEW MODE ---
     if (!isEditing && profile) {
         return (
-            <div className="max-w-3xl mx-auto bg-white dark:bg-[#1e2b3c] border border-slate-100 dark:border-slate-800/60 rounded-xl p-8 shadow-sm space-y-6">
+            <div className="max-w-3xl mx-auto bg-[#ECF0FF] dark:bg-[#001B3F] border border-slate-100 dark:border-slate-800/60 rounded-xl p-8 shadow-sm space-y-6">
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-6 border-b border-slate-100 dark:border-slate-800">
                     <div className="flex items-center gap-4">
                         <img
@@ -96,7 +116,7 @@ export default function DoctorProfileEditor({ user, existingProfile }) {
                     </div>
                     <Button
                         onPress={() => setIsEditing(true)}
-                        className="bg-[#107c41] text-white font-medium hover:bg-[#0e6b37] rounded-lg px-4 h-10 transition-colors"
+                        className="bg-[#4376C8] text-white font-medium hover:bg-[#00458F] rounded-lg px-4 h-10 transition-colors"
                     >
                         Edit Credentials
                     </Button>
@@ -164,7 +184,7 @@ export default function DoctorProfileEditor({ user, existingProfile }) {
 
                     {/* ROW 3: Attached Medical Hospital Name */}
                     <TextField name="hospitalName" defaultValue={profile?.hospitalName || ''} isInvalid={!!errors.hospitalName} className="flex flex-col gap-1 w-full">
-                        <Label className="text-slate-500 dark:text-slate-400 font-semibold text-xs uppercase tracking-wider">Attached Medical Hospital Name</Label>
+                        <Label className="text-slate-500 dark:text-slate-400 font-semibold text-xs uppercase tracking-wider">Affiliated Medical Hospital Name</Label>
                         <Input placeholder="Boston General Hospital" className={textInputClass} />
                         {errors.hospitalName && <FieldError className="text-xs text-rose-500 mt-1">{errors.hospitalName}</FieldError>}
                     </TextField>
@@ -172,7 +192,7 @@ export default function DoctorProfileEditor({ user, existingProfile }) {
                     {/* ROW 4: Profile Photo URL Field (Matches Image) */}
                     <TextField name="profileImage" defaultValue={profile?.profileImage || ''} className="flex flex-col gap-1 w-full">
                         <Label className="text-slate-500 dark:text-slate-400 font-semibold text-xs uppercase tracking-wider">Profile Photo / Avatar Image (URL)</Label>
-                        <Input placeholder="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=3" className={textInputClass} />
+                        <Input placeholder="https://example.com/avatar.jpg" className={textInputClass} />
                     </TextField>
                 </Fieldset>
 
@@ -190,7 +210,7 @@ export default function DoctorProfileEditor({ user, existingProfile }) {
                     )}
                     <Button
                         type="submit"
-                        className="bg-[#107c41] text-white font-semibold hover:bg-[#0e6b37] rounded-lg px-6 transition-colors h-11 flex items-center gap-2"
+                        className="bg-[#4376C8] text-white font-semibold hover:bg-[#00458F] rounded-lg px-6 transition-colors h-11 flex items-center gap-2"
                     >
                         Save Professional Records
                     </Button>

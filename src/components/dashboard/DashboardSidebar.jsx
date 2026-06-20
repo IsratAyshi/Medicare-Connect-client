@@ -17,7 +17,7 @@ const DashboardSidebar = async () => {
 
     const medSpecialistSidebarLinks = [
         { name: 'Overview', href: '/dashboard/medSpecialist', icon: 'LayoutDashboard' },
-        { name: 'Manage Schedule', href: '/dashboard/medSpecialist/schedule', icon: 'SquareChartGantt' },
+        { name: 'Manage Schedule', href: '/dashboard/medSpecialist/manageSchedule', icon: 'SquareChartGantt' },
         { name: 'Appointments Inbox', href: '/dashboard/medSpecialist/appointments', icon: 'CalendarDays', badge: 3 },
         { name: 'Prescriptions Cabin', href: '/dashboard/medSpecialist/prescriptions', icon: 'Syringe' },
         { name: 'My Profile', href: '/dashboard/medSpecialist/profile', icon: 'UserRound' },
@@ -58,7 +58,7 @@ const DashboardSidebar = async () => {
     const displayImage = user?.image || "";
 
     return (
-        <aside className="w-[80px] lg:w-[280px] min-h-screen bg-white dark:bg-[#001e3d] border-r border-slate-100 dark:border-slate-800 flex flex-col py-6 px-4 font-hanken">
+        <aside className="w-[80px] lg:w-[280px] min-h-screen bg-white dark:bg-[#001B3F] border-r border-slate-100 dark:border-slate-800 flex flex-col py-6 px-4 font-hanken">
 
             {/* 1. User Profile Box */}
             <div className="flex items-center gap-3 px-2 pb-6 mb-4 border-b border-slate-100 dark:border-slate-800">
