@@ -47,7 +47,7 @@ const DashboardSidebar = async () => {
     const sidebarLinks = sidebarLinksMap[currentRole];
     const baseRolePath = baseRolePathMap[currentRole];
 
-    const displayName = user?.name || "Sarah Jenkins";
+    const displayName = user?.name || "User";
 
     const displayRole = user?.accountRole === 'admin'
         ? 'ADMIN'
@@ -67,6 +67,7 @@ const DashboardSidebar = async () => {
                         referrerPolicy='no-referrer'
                         alt={displayName}
                         src={displayImage}
+                        className="w-full h-full object-cover"
                     />
                     <Avatar.Fallback>{displayName.charAt(0).toUpperCase()}</Avatar.Fallback>
                 </Avatar>

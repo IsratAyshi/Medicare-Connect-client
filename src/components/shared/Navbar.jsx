@@ -130,8 +130,11 @@ export default function Navbar() {
                                         <div className="relative group">
                                             <button className="flex items-center gap-3 p-2 rounded-full hover:bg-[#abc7ff] dark:hover:bg-[#003f83] transition-colors border border-transparent hover:border-border">
                                                 <Avatar>
-                                                    <Avatar.Image referrerPolicy='no-referrer' alt={user.name}
-                                                        src={user.image} />
+                                                    <Avatar.Image referrerPolicy='no-referrer'
+                                                        alt={user.name}
+                                                        src={user.image}
+                                                        className="w-full h-full object-cover"
+                                                    />
                                                     <Avatar.Fallback>{user.name.charAt(0).toUpperCase()}</Avatar.Fallback>
                                                 </Avatar>
                                                 <div className="text-left hidden lg:block">
