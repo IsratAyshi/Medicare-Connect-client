@@ -14,7 +14,8 @@ import {
     UsersRound,
     CircleCheck,
     SquareChartGantt,
-    Syringe
+    Syringe,
+    CircleDollarSign
 } from 'lucide-react';
 
 import { CiBadgeDollar } from "react-icons/ci";
@@ -32,6 +33,8 @@ const iconMap = {
     CircleCheck,
     SquareChartGantt,
     Syringe,
+    CircleDollarSign
+
 };
 
 

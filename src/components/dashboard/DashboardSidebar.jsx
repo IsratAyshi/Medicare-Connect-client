@@ -10,8 +10,8 @@ const DashboardSidebar = async () => {
     const patientSidebarLinks = [
         { name: 'Overview', href: '/dashboard/patient', icon: 'LayoutDashboard' },
         { name: 'My Appointments', href: '/dashboard/patient/appointments', icon: 'CalendarDays', badge: 3 },
-        { name: 'Payments History', href: '/dashboard/patient/payments', icon: 'CreditCard' },
-        { name: 'Feedback Reviews', href: '/dashboard/patient/reviews', icon: 'Star' },
+        { name: 'Payments History', href: '/dashboard/patient/payments', icon: 'CircleDollarSign' },
+        { name: 'My Reviews', href: '/dashboard/patient/reviews', icon: 'Star' },
         { name: 'My Profile', href: '/dashboard/patient/profile', icon: 'UserRound' },
     ];
 

@@ -18,3 +18,13 @@ export const getLoggedInDoctorProfile = async () => {
     const user = await getUserSession();
     return getDoctorProfile(user?.id);
 }
+
+
+export const getDoctorDetails = async (id) => {
+    return serverFetch(`/api/doctors/details/${id}`);
+};
+
+// reviews for a specific doctor
+export const getDoctorReviews = async (doctorId) => {
+    return serverFetch(`/api/reviews/${doctorId}`);
+};
