@@ -20,11 +20,13 @@ import {
     At,
     ShieldKeyhole,
     Picture,
+    Handset,
 } from "@gravity-ui/icons";
 
 
 import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
+import { toast } from "react-toastify";
 
 export default function SignupForm({ redirectTo = "/" }) {
     const [name, setName] = useState("");
@@ -33,6 +35,7 @@ export default function SignupForm({ redirectTo = "/" }) {
     const [clinicRole, setClinicRole] = useState("Medical Specialist");
     const [gender, setGender] = useState("Male");
     const [avatarUrl, setAvatarUrl] = useState("");
+    const [phone, setPhone] = useState("");
 
     const [isVisible, setIsVisible] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -73,6 +76,8 @@ export default function SignupForm({ redirectTo = "/" }) {
                 accountRole: clinicRole.toLowerCase().replace(/\s+/g, "_"),
                 gender: gender.toLowerCase(),
                 image: avatarUrl || undefined,
+                status: "active",
+                phoneNumber: phone,
             });
 
             if (authError) {
@@ -81,10 +86,12 @@ export default function SignupForm({ redirectTo = "/" }) {
             }
 
             setSuccess("Profile generated successfully!");
+            toast.success("Profile generated successfully!");
             setName("");
             setEmail("");
             setPassword("");
             setAvatarUrl("");
+            setPhone("");
 
             router.refresh();
             router.push(redirectTo);
@@ -92,16 +99,17 @@ export default function SignupForm({ redirectTo = "/" }) {
         } catch (err) {
             console.error(err);
             setError("An unexpected network error occurred.");
+            toast.error("An unexpected network error occurred.");
         } finally {
             setIsLoading(false);
         }
     };
 
     return (
-        <div className="flex min-h-[60vh] items-center justify-center bg-[#f8f9ff] dark:bg-[#233143] py-10 px-4 font-manrope transition-colors duration-200">
-            <Card className="w-full max-w-lg p-5 sm:p-7 rounded-[2.5rem] bg-white dark:bg-[#002b5c] shadow-[0_15px_40px_rgba(0,63,131,0.05)] border border-[#c2c6d3]/30 dark:border-white/5">
+        <div className="flex min-h-[60vh] items-center justify-center bg-[#f8f9ff] dark:bg-[#233143] py-8 px-4 font-manrope transition-colors duration-200">
+            <Card className="w-full max-w-lg p-4 sm:p-6 rounded-[2.5rem] bg-white dark:bg-[#002b5c] shadow-[0_15px_40px_rgba(0,63,131,0.05)] border border-[#c2c6d3]/30 dark:border-white/5">
 
-                <div className="flex flex-col items-center justify-center gap-2 pb-6 text-center">
+                <div className="flex flex-col items-center justify-center gap-2 pb-4 text-center">
                     <h1 className="text-[24px] sm:text-[30px] font-bold tracking-tight text-[#00234a] dark:text-[#fff]">
                         Create Your Profile
                     </h1>
@@ -110,10 +118,10 @@ export default function SignupForm({ redirectTo = "/" }) {
                     </p>
                 </div>
 
-                <form onSubmit={handleSignup} className="flex flex-col gap-5 mt-4">
+                <form onSubmit={handleSignup} className="flex flex-col gap-5 mt-2">
 
                     {/* Full Name */}
-                    <TextField isRequired name="name" className="flex flex-col gap-1.5">
+                    <TextField isRequired name="name" className="flex flex-col gap-1.2">
                         <Label className="text-xs font-[700] uppercase tracking-wider text-[#00234a]/70 dark:text-white/70">
                             Full Name
                         </Label>
@@ -130,7 +138,7 @@ export default function SignupForm({ redirectTo = "/" }) {
                     </TextField>
 
                     {/* Email Address */}
-                    <TextField isRequired name="email" type="email" className="flex flex-col gap-1.5">
+                    <TextField isRequired name="email" type="email" className="flex flex-col gap-1.2">
                         <Label className="text-xs font-[700] uppercase tracking-wider text-[#00234a]/70 dark:text-white/70">
                             Email Address
                         </Label>
@@ -146,7 +154,7 @@ export default function SignupForm({ redirectTo = "/" }) {
                     </TextField>
 
                     {/* Password */}
-                    <TextField isRequired name="password" className="flex flex-col gap-1.5">
+                    <TextField isRequired name="password" className="flex flex-col gap-1.2">
                         <Label className="text-xs font-[700] uppercase tracking-wider text-[#00234a]/70 dark:text-white/70">
                             Password
                         </Label>
@@ -169,11 +177,28 @@ export default function SignupForm({ redirectTo = "/" }) {
                         </InputGroup>
                     </TextField>
 
+                    {/* Phone */}
+                    <TextField isRequired name="phone" type="tel" className="flex flex-col gap-1.2">
+                        <Label className="text-xs font-[700] uppercase tracking-wider text-[#00234a]/70 dark:text-white/70">
+                            Phone Number
+                        </Label>
+                        <InputGroup className="flex items-center gap-2 border border-[#c2c6d3]/60 dark:border-white/10 rounded-xl px-3 bg-[#f8f9ff] dark:bg-blue-900 focus-within:border-[#0052ad] transition-colors">
+                            {/* Replace Person with Phone icon if you import it from @gravity-ui/icons */}
+                            <Handset className="text-zinc-400 dark:text-zinc-500 shrink-0" size={16} />
+                            <Input
+                                placeholder="+880 1XXXX-XXXXXX"
+                                value={phone}
+                                onChange={(e) => setPhone(e.target.value)}
+                                className="w-full bg-transparent py-2.5 text-[15px] font-[500] outline-none border-none text-[#00234a] dark:text-[#fff] shadow-none"
+                            />
+                        </InputGroup>
+                    </TextField>
+
                     {/* Grid Block using HeroUI v3 Anatomy for Select layout elements */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
                         {/* Clinic Role Select */}
-                        <div className="flex flex-col gap-1.5">
+                        <div className="flex flex-col gap-1.2">
                             <Label className="text-xs font-[700] uppercase tracking-wider text-[#00234a]/70 dark:text-white/70">
                                 Role
                             </Label>
@@ -190,14 +215,14 @@ export default function SignupForm({ redirectTo = "/" }) {
                                     <ListBox className="bg-white dark:bg-[#001f42] border border-[#c2c6d3]/30 dark:border-white/10 rounded-xl p-1">
                                         <ListBox.Item id="Medical Specialist" className="p-2 text-sm text-[#00234a] dark:text-[#fff] cursor-pointer hover:bg-zinc-100 dark:hover:bg-[#002b5c] rounded-lg">Medical Specialist</ListBox.Item>
 
-                                        <ListBox.Item id="Patient Family" className="p-2 text-sm text-[#00234a] dark:text-[#fff] cursor-pointer hover:bg-zinc-100 dark:hover:bg-[#002b5c] rounded-lg">Patient Client</ListBox.Item>
+                                        <ListBox.Item id="Patient Family" className="p-2 text-sm text-[#00234a] dark:text-[#fff] cursor-pointer hover:bg-zinc-100 dark:hover:bg-[#002b5c] rounded-lg">Patient Family</ListBox.Item>
                                     </ListBox>
                                 </Select.Popover>
                             </Select>
                         </div>
 
                         {/* Gender Select */}
-                        <div className="flex flex-col gap-1.5">
+                        <div className="flex flex-col gap-1.2">
                             <Label className="text-xs font-[700] uppercase tracking-wider text-[#00234a]/70 dark:text-white/70">
                                 Gender
                             </Label>
@@ -222,7 +247,7 @@ export default function SignupForm({ redirectTo = "/" }) {
                     </div>
 
                     {/* Photo URL Field */}
-                    <TextField name="avatarUrl" className="flex flex-col gap-1.5">
+                    <TextField name="avatarUrl" className="flex flex-col gap-1.2">
                         <Label className="text-xs font-[700] uppercase tracking-wider text-[#00234a]/70 dark:text-white/70">
                             Photo URL (Optional)
                         </Label>

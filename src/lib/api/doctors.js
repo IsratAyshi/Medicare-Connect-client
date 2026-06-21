@@ -2,8 +2,9 @@ import { protectedFetch, serverFetch } from "../core/server"
 import { getUserSession } from "../core/session";
 
 
-export const getDoctors = async () => {
-    return protectedFetch('/api/doctors');
+export const getDoctors = async (queryString) => {
+    // return protectedFetch('/api/doctors');
+    return serverFetch(`/api/doctors?${queryString}`);
 }
 
 

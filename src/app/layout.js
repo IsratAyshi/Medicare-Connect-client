@@ -4,6 +4,7 @@ dns.setServers(["8.8.8.8", "8.8.4.4"]);
 import { Geist, Geist_Mono, Hanken_Grotesk, Manrope } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
+import { ToastContainer } from "react-toastify";
 
 
 const geistSans = Geist({
@@ -43,6 +44,7 @@ export default function RootLayout({ children }) {
     >
       <body className="min-h-full flex flex-col">
         <Providers>
+          <ToastContainer />
           {children}
         </Providers>
       </body>

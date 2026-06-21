@@ -25,6 +25,15 @@ export const auth = betterAuth({
                 type: "string",
                 default: "other",
                 input: true,
+            },
+            status: {
+            type: "string",
+            default: "active",
+            input: true
+            },
+            phoneNumber: {
+            type: "string",
+            input: true
             }
         }
     },

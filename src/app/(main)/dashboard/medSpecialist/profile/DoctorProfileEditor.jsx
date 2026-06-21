@@ -11,10 +11,11 @@ import {
     Select,
     ListBox,
     Button,
-    toast
 } from '@heroui/react';
 import { ChevronDown } from '@gravity-ui/icons';
 import { updateDoctorProfile } from '@/lib/actions/doctors';
+import { toast } from 'react-toastify';
+import { useRouter } from 'next/navigation';
 
 const textInputClass = "w-full bg-slate-50 dark:bg-[#1a2635] border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 rounded-lg px-3 py-2.5 outline-none placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:border-emerald-600 dark:focus:border-emerald-500 transition";
 const selectBoxClass = "w-full flex flex-col gap-1";
@@ -27,6 +28,8 @@ export default function DoctorProfileEditor({ user, existingProfile }) {
     const [profile, setProfile] = useState(existingProfile);
     const [isEditing, setIsEditing] = useState(!existingProfile?._id);
     const [errors, setErrors] = useState({});
+
+    const router = useRouter();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -89,6 +92,8 @@ export default function DoctorProfileEditor({ user, existingProfile }) {
                 toast.success("Professional credentials saved successfully!");
                 setErrors({});
                 setIsEditing(false); // Flipping this back to false updates the UI instantly
+                router.refresh();
+
             } else {
                 toast.error("No changes were made to your profile details.");
             }
@@ -107,11 +112,25 @@ export default function DoctorProfileEditor({ user, existingProfile }) {
                         <img
                             src={profile.profileImage || "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=300"}
                             alt={profile.doctorName}
-                            className="w-16 h-16 rounded-xl object-cover ring-2 ring-emerald-500/20"
+                            className="w-18 h-18 rounded-xl object-cover ring-2 ring-emerald-500/20"
                         />
                         <div>
                             <h1 className="text-xl font-bold text-slate-800 dark:text-slate-100">{profile.doctorName}</h1>
                             <p className="text-sm text-emerald-600 dark:text-emerald-400 font-medium">{profile.specialization} Specialist</p>
+                            <div className="flex items-center gap-1.5 text-sm text-slate-600 dark:text-slate-300">
+                                <span>Verification:</span>
+                                <span className={`
+            px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider border select-none
+            ${profile.verificationStatus?.toLowerCase() === 'approved'
+                                        ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-900/40'
+                                        : profile.verificationStatus?.toLowerCase() === 'rejected'
+                                            ? 'bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-400 border-rose-200 dark:border-rose-900/40'
+                                            : 'bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-900/40' // Fallback to Pending styles
+                                    }
+        `}>
+                                    {profile.verificationStatus || 'Pending'}
+                                </span>
+                            </div>
                         </div>
                     </div>
                     <Button
