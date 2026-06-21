@@ -7,7 +7,6 @@ export const getDoctors = async (queryString) => {
     return serverFetch(`/api/doctors?${queryString}`);
 }
 
-
 export const getDoctorProfile = async (userId) => {
     if (!userId) return null;
     return serverFetch(`/api/doctors/${userId}`);
@@ -27,4 +26,10 @@ export const getDoctorDetails = async (id) => {
 // reviews for a specific doctor
 export const getDoctorReviews = async (doctorId) => {
     return serverFetch(`/api/reviews/${doctorId}`);
+};
+
+
+// featured first 4 doctors for homepage
+export const getFeaturedDoctors = async () => {
+    return serverFetch('/api/doctors/featured');
 };

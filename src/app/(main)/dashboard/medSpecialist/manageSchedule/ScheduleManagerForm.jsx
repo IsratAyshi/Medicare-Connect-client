@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { Select, ListBox, Button } from '@heroui/react';
 import { ChevronDown, TrashBin } from '@gravity-ui/icons';
 import { updateDoctorSchedule } from '@/lib/actions/doctors';
+import { toast } from 'react-toastify';
 
 const WEEKDAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 const TIME_SLOTS = [
@@ -52,7 +53,7 @@ export default function ScheduleManagerForm({ userId, initialDays, initialSlots 
         if (!slotValue) return;
 
         if (slots.includes(slotValue)) {
-            alert(`${slotValue} is already configured.`);
+            toast.warning(`${slotValue} is already configured.`);
             return;
         }
         const updatedSlots = [...slots, slotValue].sort((a, b) => {
@@ -72,13 +73,13 @@ export default function ScheduleManagerForm({ userId, initialDays, initialSlots 
                 availableDays: days,
                 availableSlots: slots
             });
-            if (res?.success || res?.acknowledged || res?.modifiedCount > 0) {
-                alert("Clinical slots updated successfully!");
+            if (res?.modifiedCount > 0) {
+                toast.success("Clinical slots updated successfully!");
             } else {
-                alert("No changes detected in configurations.");
+                toast.warning("No changes detected in configurations.");
             }
         } catch (err) {
-            alert("Could not synchronize timetable properties.");
+            toast.error("Could not synchronize timetable properties.");
         } finally {
             setIsSaving(false);
         }

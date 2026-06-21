@@ -92,7 +92,7 @@ export default function PatientProfileEditor({ user, existingProfile }) {
     };
 
     return (
-        <div className="max-w-3xl mx-auto bg-white dark:bg-[#1e2b3c] p-8 border border-slate-100 dark:border-slate-800 rounded-3xl shadow-sm">
+        <div className="max-w-3xl mx-auto bg-white dark:bg-[#00234a] p-8 border border-slate-100 dark:border-slate-800 rounded-3xl shadow-sm">
             <Form onSubmit={handleSubmit} className="space-y-6" validationErrors={errors} validationBehavior="aria">
                 <Fieldset className="space-y-5 w-full">
                     <legend className="text-2xl font-bold text-slate-800 dark:text-slate-100 w-full pb-4 mb-2">
@@ -129,6 +129,7 @@ export default function PatientProfileEditor({ user, existingProfile }) {
                         <Select
                             className={selectBoxClass}
                             name="gender"
+                            isRequired
                             defaultSelectedKeys={[profile?.gender.toLowerCase() || 'female']}
                         >
                             <Label className="text-slate-500 dark:text-slate-400 font-semibold text-xs uppercase tracking-wider">Gender</Label>
@@ -158,7 +159,7 @@ export default function PatientProfileEditor({ user, existingProfile }) {
                     <Button
                         type="submit"
                         disabled={isSubmitting}
-                        className="bg-[#2D6A4F] hover:bg-[#1B4332] text-white font-semibold rounded-xl px-8 transition-colors h-11 flex items-center justify-center disabled:opacity-50"
+                        className="bg-[#3a68b3] hover:bg-[#1a3f83] text-white font-semibold rounded-xl px-8 transition-colors h-11 flex items-center justify-center disabled:opacity-50"
                     >
                         {isSubmitting ? "Saving Changes..." : "Save Changes"}
                     </Button>

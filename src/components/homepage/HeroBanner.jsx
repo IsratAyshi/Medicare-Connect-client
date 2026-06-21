@@ -4,7 +4,7 @@ import { Link, Button } from "@heroui/react";
 import { Magnifier, ChevronRight } from '@gravity-ui/icons';
 import FloatingStats from "./FloatingStats";
 
-export default function HeroBanner() {
+export default function HeroBanner({ stats }) {
     return (
         <section
             className="relative w-full min-h-[calc(100vh-80px)] bg-cover bg-center bg-no-repeat flex items-center py-40 px-6 lg:px-12 overflow-hidden font-manrope transition-colors duration-200"
@@ -42,24 +42,23 @@ export default function HeroBanner() {
 
                     {/* Call-To-Actions*/}
                     <div className="flex flex-wrap items-center gap-4 sm:gap-6">
-                        <Button
-                            href="/api/all-doctors"
-                            as={Link}
-                            className="bg-[#003f83] dark:bg-[#b7ceff] text-white dark:text-[#003f83] font-hanken text-[15px] font-[700] rounded-xl px-7 h-[52px] hover:opacity-90 shadow-md transition-all duration-200"
-                        >
-                            <Magnifier size={16} /> Find a Doctor
-                        </Button>
+                        <Link
+                            href="/all-doctors">
+                            <Button
+                                className="bg-[#003f83] dark:bg-[#b7ceff] text-white dark:text-[#003f83] font-hanken text-[15px] font-[700] rounded-xl px-7 h-[52px] hover:opacity-90 shadow-md transition-all duration-200"
+                            >
+                                <Magnifier size={16} /> Find a Doctor
+                            </Button>
+                        </Link>
 
-                        <Button
-                            href="#about"
-                            as={Link}
-                            variant="bordered"
-                            className="border-[2px] border-[#003f83] dark:border-[#abc7ff] text-[#003f83] dark:text-[#abc7ff] font-hanken text-[15px] font-[700] rounded-xl px-7 h-[52px] bg-transparent hover:bg-[#003f83] dark:hover:bg-[#abc7ff] hover:text-white dark:hover:text-[#003f83] transition-all duration-200"
-                        >
-                            Learn More <ChevronRight size={16} />
-                        </Button>
-
-
+                        <Link href="#about">
+                            <Button
+                                variant="bordered"
+                                className="border-[2px] border-[#003f83] dark:border-[#abc7ff] text-[#003f83] dark:text-[#abc7ff] font-hanken text-[15px] font-[700] rounded-xl px-7 h-[52px] bg-transparent hover:bg-[#003f83] dark:hover:bg-[#abc7ff] hover:text-white dark:hover:text-[#003f83] transition-all duration-200"
+                            >
+                                Learn More <ChevronRight size={16} />
+                            </Button>
+                        </Link>
                     </div>
 
                     <div className="w-full max-w-[100px] aspect-4/5 mt-8">
@@ -71,7 +70,7 @@ export default function HeroBanner() {
 
             {/* ==== FLOATING STATS ==== */}
             <div className="absolute bottom-6 left-1/2 -translate-x-1/2 w-[calc(100%-48px)] max-w-[1200px] z-20">
-                <FloatingStats />
+                <FloatingStats stats={stats} />
             </div>
 
         </section>
