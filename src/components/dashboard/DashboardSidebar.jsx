@@ -25,10 +25,10 @@ const DashboardSidebar = async () => {
 
     const adminSidebarLinks = [
         { name: 'Analytics', href: '/dashboard/admin', icon: 'ChartColumn' },
-        { name: 'Manage Users', href: '/dashboard/admin/users', icon: 'UsersRound' },
-        { name: 'Verify Doctors', href: '/dashboard/admin/users', icon: 'CircleCheck' },
-        { name: 'Appointments Registry', href: '/dashboard/admin/appointments', icon: 'CalendarDays' },
-        { name: 'Stripe Cash Flow', href: '/dashboard/admin/payments', icon: 'CiBadgeDollar' },
+        { name: 'Manage Users', href: '/dashboard/admin/manageUsers', icon: 'UsersRound' },
+        { name: 'Verify Doctors', href: '/dashboard/admin/doctorsList', icon: 'CircleCheck' },
+        { name: 'Appointments Registry', href: '/dashboard/admin/appointmentsReg', icon: 'CalendarDays' },
+        { name: 'Stripe Cash Flow', href: '/dashboard/admin/allPayments', icon: 'CiBadgeDollar' },
     ];
 
     const sidebarLinksMap = {
