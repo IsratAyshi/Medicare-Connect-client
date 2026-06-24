@@ -67,7 +67,8 @@ export default function DoctorProfileEditor({ user, existingProfile }) {
             profileImage: rawProfileImage.trim() !== '' ? rawProfileImage : (profile?.profileImage || user?.image || ''),
             availableDays: profile?.availableDays || [],
             availableSlots: profile?.availableSlots || [],
-            verificationStatus: profile?.verificationStatus || 'Pending'
+            verificationStatus: profile?.verificationStatus || 'Pending',
+            stripePriceId: profile?.stripePriceId || null
         };
 
         try {
