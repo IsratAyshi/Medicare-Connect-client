@@ -26,6 +26,7 @@ export async function POST(req) {
       cancel_url: `${origin}/all-doctors/${doctorId}?payment=cancelled`,
 
       metadata: {
+        appointmentId: metadata?.appointmentId ? String(metadata.appointmentId) : null,
         patientId: metadata?.patientId ? String(metadata.patientId) : null,
         doctorId: metadata?.doctorId ? String(metadata.doctorId) : null,
         appointmentDate: metadata?.appointmentDate ? String(metadata.appointmentDate) : null,

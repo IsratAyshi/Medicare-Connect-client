@@ -144,7 +144,7 @@ export default function DoctorDetailsContainer({ doctor, initialReviews }) {
             const res = await createNewAppointment(appointmentPayload);
 
             if (res?.success) {
-                toast.success("Appointment registered! Please clear payment due at the clinic.");
+                toast.success("Appointment registered! Please clear payment due from your dashboard.");
                 setSymptoms("");
                 setIsModalOpen(false);
             } else {

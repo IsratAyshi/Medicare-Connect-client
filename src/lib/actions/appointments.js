@@ -26,12 +26,13 @@ export async function verifyAndSaveStripeAppointment(sessionId) {
         }
 
         // Extract the appointment details from the session's metadata
-        const { patientId, doctorId, appointmentDate, appointmentTime, symptoms } = session.metadata;
+        const { appointmentId, patientId, doctorId, appointmentDate, appointmentTime, symptoms } = session.metadata;
 
         // Forward the data to Express backend
         const result = await serverMutation("/api/appointments/fulfill-paid", {
             patientId,
             doctorId,
+            appointmentId,
             appointmentDate,
             appointmentTime,
             symptoms,

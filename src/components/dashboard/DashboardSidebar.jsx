@@ -9,16 +9,16 @@ const DashboardSidebar = async () => {
     // Pass icons as plain strings to make them serializable
     const patientSidebarLinks = [
         { name: 'Overview', href: '/dashboard/patient', icon: 'LayoutDashboard' },
-        { name: 'My Appointments', href: '/dashboard/patient/appointments', icon: 'CalendarDays', badge: 3 },
-        { name: 'Payments History', href: '/dashboard/patient/payments', icon: 'CircleDollarSign' },
-        { name: 'My Reviews', href: '/dashboard/patient/reviews', icon: 'Star' },
+        { name: 'My Appointments', href: '/dashboard/patient/myAppointments', icon: 'CalendarDays' }, //badge: 3
+        { name: 'Payments History', href: '/dashboard/patient/paymentHistory', icon: 'CircleDollarSign' },
+        { name: 'My Reviews', href: '/dashboard/patient/myReviews', icon: 'Star' },
         { name: 'My Profile', href: '/dashboard/patient/profile', icon: 'UserRound' },
     ];
 
     const medSpecialistSidebarLinks = [
         { name: 'Overview', href: '/dashboard/medSpecialist', icon: 'LayoutDashboard' },
         { name: 'Manage Schedule', href: '/dashboard/medSpecialist/manageSchedule', icon: 'SquareChartGantt' },
-        { name: 'Appointments Inbox', href: '/dashboard/medSpecialist/appointments', icon: 'CalendarDays', badge: 3 },
+        { name: 'Appointments Inbox', href: '/dashboard/medSpecialist/appointments', icon: 'CalendarDays' }, //badge: 3
         { name: 'Prescriptions Cabin', href: '/dashboard/medSpecialist/prescriptions', icon: 'Syringe' },
         { name: 'My Profile', href: '/dashboard/medSpecialist/profile', icon: 'UserRound' },
     ];
