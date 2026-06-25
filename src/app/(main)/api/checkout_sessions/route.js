@@ -8,7 +8,7 @@ export async function POST(req) {
   try {
     // const headersList = await headers()
     const body = await req.json();
-    const { stripePriceId, doctorId } = body;
+    const { stripePriceId, doctorId, metadata } = body;
 
     const origin = req.headers.get('origin')
 
@@ -24,6 +24,14 @@ export async function POST(req) {
       mode: 'payment',
       success_url: `${origin}/appointments/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/all-doctors/${doctorId}?payment=cancelled`,
+
+      metadata: {
+        patientId: metadata?.patientId ? String(metadata.patientId) : null,
+        doctorId: metadata?.doctorId ? String(metadata.doctorId) : null,
+        appointmentDate: metadata?.appointmentDate ? String(metadata.appointmentDate) : null,
+        appointmentTime: metadata?.appointmentTime ? String(metadata.appointmentTime) : null,
+        symptoms: metadata?.symptoms ? String(metadata.symptoms) : "",
+      }
     });
 
     // return NextResponse.redirect(session.url, 303)

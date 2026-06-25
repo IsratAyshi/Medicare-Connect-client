@@ -111,9 +111,9 @@ export default function DoctorDetailsContainer({ doctor, initialReviews }) {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
-                        stripePriceId: doctor.stripePriceId, // Populated from your MongoDB document
+                        stripePriceId: doctor.stripePriceId,
                         doctorId: doctor._id,
-                        metadata: appointmentMetadata   // Carries details to Stripe for processing later
+                        metadata: appointmentMetadata   //Carries details to Stripe
                     }),
                 });
 
