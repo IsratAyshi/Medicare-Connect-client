@@ -1,6 +1,7 @@
 'use server';
 
 
+import { revalidatePath } from "next/cache";
 import { serverMutation } from "../core/server";
 import { stripe } from "../stripe";
 
@@ -46,5 +47,23 @@ export async function verifyAndSaveStripeAppointment(sessionId) {
     } catch (error) {
         console.error("Relay handler execution failure:", error);
         return { success: false, message: error.message || "Failed processing payment verification." };
+    }
+}
+
+
+export async function updateAppointmentStatusAction(appointmentId, nextStatus) {
+    try {
+        const result = await serverMutation(
+            `/api/doctor/appointments/${appointmentId}/status`, 
+            { status: nextStatus }, 
+            'PATCH'
+        );
+
+        revalidatePath("/dashboard/medSpecialist/appointments");
+        
+        return result;
+    } catch (error) {
+        console.error("Action error:", error);
+        return { success: false, error: error.message };
     }
 }

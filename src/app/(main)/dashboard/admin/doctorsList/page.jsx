@@ -14,7 +14,7 @@ export default async function VerifyLicensesPage() {
                 {/* Header Context Bar */}
                 <div>
                     <h1 className="text-3xl font-[800] text-slate-800 dark:text-white tracking-tight">
-                        Verify Practitioner Licenses
+                        Verify Registered Medical Specialist Licenses
                     </h1>
                     <p className="text-sm font-medium text-slate-400 dark:text-zinc-400 mt-1">
                         Review uploaded credentials, manage license validations, and regulate specialized clinical memberships.

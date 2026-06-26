@@ -54,7 +54,7 @@ export default function DoctorFilters({
 
                         <Select.Popover className="bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-xl shadow-xl mt-1 overflow-hidden z-50">
                             <ListBox className="p-1">
-                                {["all", "general-medicine", "pediatrics", "orthopedics", "cardiology", "neurology"].map((spec) => (
+                                {["all", "general-medicine", "pediatrics", "orthopedics", "cardiology", "neurology", "dermatology", "gynecology"].map((spec) => (
                                     <ListBox.Item
                                         key={spec}
                                         id={spec}

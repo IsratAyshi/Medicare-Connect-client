@@ -205,24 +205,43 @@ export default function DoctorDetailsContainer({ doctor, initialReviews }) {
 
                     {initialReviews.length > 0 ? (
                         <div className="space-y-4">
-                            {initialReviews.map((review, idx) => (
-                                <div key={idx} className="p-4 rounded-2xl bg-slate-50 dark:bg-zinc-800/40 border border-slate-100 dark:border-zinc-800">
-                                    <div className="flex justify-between items-start mb-2">
-                                        <div>
-                                            <h4 className="text-sm font-bold text-slate-800 dark:text-white">{review.reviewerName || "Anonymous User"}</h4>
-                                            <span className="text-[11px] text-slate-400">{review.date || "Recent"}</span>
+                            {initialReviews.map((review, idx) => {
+
+                                const currentRating = Number(review.rating) || 5;
+
+                                return (
+                                    <div key={idx} className="p-4 rounded-2xl bg-slate-50 dark:bg-zinc-800/40 border border-slate-100 dark:border-zinc-800">
+                                        <div className="flex justify-between items-start mb-2">
+                                            <div>
+                                                {/* Displays specific user metadata if you eventually populate/populate it via $lookup, otherwise safe fallback */}
+                                                <h4 className="text-sm font-bold text-slate-800 dark:text-white">
+                                                    {review.reviewerName || review.patientName || "Anonymous User"}
+                                                </h4>
+                                                <span className="text-[11px] text-slate-400">
+                                                    {review.createdAt ? new Date(review.createdAt).toLocaleDateString() : "Recent"}
+                                                </span>
+                                            </div>
+
+                                            {/* Star Rating Display */}
+                                            <div className="flex text-amber-400 gap-0.5">
+                                                {[...Array(5)].map((_, i) => (
+                                                    <Star
+                                                        key={i}
+                                                        className={`w-3.5 h-3.5 ${i < currentRating
+                                                            ? "fill-current text-amber-400"
+                                                            : "text-slate-300 dark:text-zinc-600"
+                                                            }`}
+                                                    />
+                                                ))}
+                                            </div>
                                         </div>
-                                        <div className="flex text-amber-400 gap-0.5">
-                                            {[...Array(review.rating || 5)].map((_, i) => (
-                                                <Star key={i} className="w-3.5 h-3.5 fill-current" />
-                                            ))}
-                                        </div>
+
+                                        <p className="text-xs text-slate-600 dark:text-zinc-300 italic leading-relaxed">
+                                            "{review.reviewText || "No written feedback provided."}"
+                                        </p>
                                     </div>
-                                    <p className="text-xs text-slate-600 dark:text-zinc-300 italic leading-relaxed">
-                                        "{review.comment}"
-                                    </p>
-                                </div>
-                            ))}
+                                );
+                            })}
                         </div>
                     ) : (
                         <p className="text-sm text-slate-400 dark:text-zinc-500 italic">No feedback reviews submitted yet for this specialist.</p>
@@ -321,7 +340,7 @@ export default function DoctorDetailsContainer({ doctor, initialReviews }) {
                 )}
             </div>
 
-            {/* 3. INJECT THE RECONFIGURED TRANSACTION OVERLAY MODAL */}
+            {/* TRANSACTION OVERLAY MODAL */}
             <AppointmentBookingModal
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}

@@ -20,6 +20,7 @@ import {
 
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 export default function LoginForm({ redirectTo = "/" }) {
     // Form fields
@@ -51,12 +52,15 @@ export default function LoginForm({ redirectTo = "/" }) {
 
             if (authError) {
                 setError(authError.message || "Invalid email or password.");
+                toast.error(authError.message || "Invalid email or password.");
                 return;
             }
 
             setSuccess("Signed in successfully! Accessing portal...");
+            toast.success("Signed in successfully!");
             setEmail("");
             setPassword("");
+
 
             router.refresh();
             router.push(redirectTo);

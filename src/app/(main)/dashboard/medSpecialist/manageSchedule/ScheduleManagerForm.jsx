@@ -137,7 +137,7 @@ export default function ScheduleManagerForm({ userId, initialDays, initialSlots 
 
                 {/* CARD 2: Configured Appointment Hours */}
                 <div className="bg-white dark:bg-[#001e3d] border border-slate-100 dark:border-slate-800/60 rounded-2xl p-6 sm:p-8 shadow-sm space-y-6">
-                    <h2 className="text-lg font-bold text-slate-800 dark:text-slate-100">Appointment Hours</h2>
+                    <h2 className="text-lg font-bold text-slate-800 dark:text-slate-100">Appointment Time Slots</h2>
 
                     <div className="flex flex-wrap items-center gap-3 w-full">
                         <Select

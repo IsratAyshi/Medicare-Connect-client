@@ -33,3 +33,30 @@ export const getDoctorReviews = async (doctorId) => {
 export const getFeaturedDoctors = async () => {
     return serverFetch('/api/doctors/featured');
 };
+
+
+export async function getDoctorAppointments(doctorId) {
+    if (!doctorId) return [];
+
+    const result = await serverFetch(`/api/doctor/appointments/${doctorId}`);
+    return result?.data || [];
+    
+}
+
+
+export async function getDoctorPrescriptions(doctorId) {
+    if (!doctorId) return [];
+
+    const result = await serverFetch(`/api/doctor/prescriptions/list/${doctorId}`);
+    return result?.data || [];
+    
+}
+
+
+export async function getSinglePatientRecord(patientId) {
+    if (!patientId) return null;
+
+    const result = await serverFetch(`/api/doctor/patient-details/${patientId}`);
+    return result?.data || null;
+    
+}

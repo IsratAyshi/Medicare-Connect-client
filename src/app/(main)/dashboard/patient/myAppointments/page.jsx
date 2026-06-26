@@ -90,7 +90,7 @@ export default async function PatientMyAppointmentPage() {
                                         )}
                                     </div>
 
-                                    {/* Right Controls Area matching screenshot statuses */}
+                                    {/* Right Controls Area */}
                                     <div className="flex flex-col justify-center items-end gap-3 min-w-[160px]">
                                         {isCompleted ? (
                                             <span className="bg-blue-50 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400 font-extrabold text-[10px] tracking-widest px-4 py-1.5 rounded-lg uppercase select-none border border-blue-100 dark:border-blue-900/30">
@@ -101,9 +101,16 @@ export default async function PatientMyAppointmentPage() {
                                                 {/* Client Buttons Handler component */}
                                                 <ActionButtons appointment={appt} isPaid={isPaid} />
 
-                                                <span className="self-center md:self-end bg-amber-50 dark:bg-amber-950/30 text-amber-600 dark:text-amber-400 font-extrabold text-[10px] tracking-widest px-4 py-1 rounded-lg uppercase border border-amber-100 dark:border-amber-900/20 select-none">
-                                                    {appt.appointmentStatus || "Pending"}
-                                                </span>
+                                                {/* Dynamic Status Chip styling logic */}
+                                                {appt.appointmentStatus?.toLowerCase() === 'accepted' ? (
+                                                    <span className="self-center md:self-end bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 font-extrabold text-[10px] tracking-widest px-4 py-1 rounded-lg uppercase border border-emerald-100 dark:border-emerald-900/20 select-none">
+                                                        Accepted
+                                                    </span>
+                                                ) : (
+                                                    <span className="self-center md:self-end bg-amber-50 dark:bg-amber-950/30 text-amber-600 dark:text-amber-400 font-extrabold text-[10px] tracking-widest px-4 py-1 rounded-lg uppercase border border-amber-100 dark:border-amber-900/20 select-none">
+                                                        {appt.appointmentStatus || "Pending"}
+                                                    </span>
+                                                )}
                                             </div>
                                         )}
                                     </div>

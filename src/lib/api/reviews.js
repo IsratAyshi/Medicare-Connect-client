@@ -17,3 +17,11 @@ export async function getPatientVisitedDoctors(patientId) {
         return [];
     }
 }
+
+
+export async function getTopPublicReviews() {
+
+    const result = await serverFetch("/api/public/top-reviews");
+    return result?.data || [];
+    
+}

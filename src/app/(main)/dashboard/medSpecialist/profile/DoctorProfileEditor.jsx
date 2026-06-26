@@ -176,6 +176,7 @@ export default function DoctorProfileEditor({ user, existingProfile }) {
                                     <ListBox.Item id="Pediatrics" className={listItemClasses} textValue="Pediatrics">Pediatrics</ListBox.Item>
                                     <ListBox.Item id="Orthopedics" className={listItemClasses} textValue="Orthopedics">Orthopedics</ListBox.Item>
                                     <ListBox.Item id="Dermatology" className={listItemClasses} textValue="Dermatology">Dermatology</ListBox.Item>
+                                    <ListBox.Item id="General Medicine" className={listItemClasses} textValue="General Medicine">General Medicine</ListBox.Item>
                                 </ListBox>
                             </Select.Popover>
                         </Select>
@@ -210,7 +211,8 @@ export default function DoctorProfileEditor({ user, existingProfile }) {
                     </TextField>
 
                     {/* ROW 4: Profile Photo URL Field (Matches Image) */}
-                    <TextField name="profileImage" defaultValue={profile?.profileImage || ''} className="flex flex-col gap-1 w-full">
+                    <TextField name="profileImage" defaultValue={profile?.profileImage || ''} className="flex flex-col gap-1 w-full"
+                    >
                         <Label className="text-slate-500 dark:text-slate-400 font-semibold text-xs uppercase tracking-wider">Profile Photo / Avatar Image (URL)</Label>
                         <Input placeholder="https://example.com/avatar.jpg" className={textInputClass} />
                     </TextField>

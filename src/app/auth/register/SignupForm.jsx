@@ -52,6 +52,7 @@ export default function SignupForm({ redirectTo = "/" }) {
 
         if (!name.trim()) {
             setError("Full representative name is required.");
+
             return;
         }
         if (!email.trim()) {
@@ -82,6 +83,7 @@ export default function SignupForm({ redirectTo = "/" }) {
 
             if (authError) {
                 setError(authError.message || "Something went wrong during profile creation.");
+                toast.error(authError.message || "Something went wrong during profile creation.");
                 return;
             }
 
