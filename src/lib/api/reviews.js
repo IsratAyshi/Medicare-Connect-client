@@ -1,4 +1,4 @@
-import { serverFetch} from "../core/server";
+import { publicServerFetch, serverFetch} from "../core/server";
 
 export async function getPatientReviews(patientId) {
     if (!patientId) return [];
@@ -21,7 +21,7 @@ export async function getPatientVisitedDoctors(patientId) {
 
 export async function getTopPublicReviews() {
 
-    const result = await serverFetch("/api/public/top-reviews");
+    const result = await publicServerFetch("/api/public/top-reviews");
     return result?.data || [];
     
 }

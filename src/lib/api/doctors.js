@@ -1,10 +1,10 @@
-import { protectedFetch, serverFetch } from "../core/server"
+import { publicServerFetch, serverFetch } from "../core/server"
 import { getUserSession } from "../core/session";
 
 
 export const getDoctors = async (queryString) => {
     // return protectedFetch('/api/doctors');
-    return serverFetch(`/api/doctors?${queryString}`);
+    return publicServerFetch(`/api/doctors?${queryString}`);
 }
 
 export const getDoctorProfile = async (userId) => {
@@ -20,18 +20,18 @@ export const getLoggedInDoctorProfile = async () => {
 
 
 export const getDoctorDetails = async (id) => {
-    return serverFetch(`/api/doctors/details/${id}`);
+    return publicServerFetch(`/api/doctors/details/${id}`);
 };
 
 // reviews for a specific doctor
 export const getDoctorReviews = async (doctorId) => {
-    return serverFetch(`/api/reviews/${doctorId}`);
+    return publicServerFetch(`/api/reviews/${doctorId}`);
 };
 
 
 // featured first 4 doctors for homepage
 export const getFeaturedDoctors = async () => {
-    return serverFetch('/api/doctors/featured');
+    return publicServerFetch('/api/doctors/featured');
 };
 
 

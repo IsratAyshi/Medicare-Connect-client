@@ -14,6 +14,24 @@ export const auth = betterAuth({
         // Optional: if you don't provide a client, database transactions won't be enabled.
         client
     }),
+    socialProviders: {
+        google: { 
+            clientId: process.env.GOOGLE_CLIENT_ID, 
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET, 
+            mapProfileToUser: async (profile, context) => {
+
+                const callbackURL = context?.callbackURL || "";
+                const isMedSpec = callbackURL.includes("medical-specialist");
+
+                return {
+                    accountRole: isMedSpec ? "medical_specialist" : "patient_family",
+                    // accountRole: "patient_family",
+                    gender: "other",
+                    status: "active",
+                };
+            },
+        }, 
+    },
     user: {
         additionalFields: {
             accountRole: {

@@ -2,10 +2,14 @@ import React from 'react';
 
 import AdminUsersTable from '@/components/dashboard/AdminUsersTable';
 import { getAllSystemUsers } from '@/lib/api/admin';
+import { getUsersList } from '@/lib/api/users';
 
 export default async function ManageUsersPage() {
     // Fetch data safely on the server side
-    const users = await getAllSystemUsers() || [];
+    // const users = await getAllSystemUsers() || [];
+
+    const data = await getUsersList();
+    const users = data?.users || [];
 
     return (
         <div className="w-full bg-[#f8f9ff] dark:bg-[#0D1C2D] min-h-screen p-6 sm:p-10 font-manrope">
