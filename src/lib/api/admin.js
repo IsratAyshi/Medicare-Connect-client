@@ -20,3 +20,13 @@ export const getAllSpecialists = async () => {
         return [];
     }
 };
+
+
+export async function getSystemClinicalRegister() {
+    const result = await serverFetch("/api/admin/appointments-register", {
+      cache: "no-store", 
+    });
+
+    return result?.success ? result.data : (result || []);
+  
+}

@@ -1,5 +1,6 @@
 'use server';
 
+import { revalidatePath } from "next/cache";
 import { serverMutation } from "../core/server";
 
 
@@ -14,7 +15,6 @@ export const updateUserAccountStatus = async (userId, targetStatus) => {
 };
 
 
-
 export const updateDoctorVerificationStatus = async (doctorId, targetStatus) => {
     const path = `/api/admin/doctors/verify/${doctorId}`;
     const data = { verificationStatus: targetStatus };
@@ -22,3 +22,26 @@ export const updateDoctorVerificationStatus = async (doctorId, targetStatus) => 
 
     return await serverMutation(path, data, method);
 };
+
+
+export async function deleteUserRecordFromDatabase(userId) {
+
+    const response = await serverMutation(`/api/admin/users/${userId}`, {}, 'DELETE');
+
+    return response; 
+  
+}
+
+export async function deleteUserAccount(userId) {
+  if (!userId) {
+    return { success: false, message: "Invalid target allocation identifier." };
+  }
+
+  const result = await deleteUserRecordFromDatabase(userId);
+
+  if (result?.success) {
+    revalidatePath("/dashboard/admin/manageUsers");
+  }
+
+  return result;
+}

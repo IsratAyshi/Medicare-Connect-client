@@ -2,14 +2,17 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
-import { Magnifier } from '@gravity-ui/icons';
-import { updateUserAccountStatus } from '@/lib/actions/admin';
+import { Magnifier, TrashBin } from '@gravity-ui/icons';
+import { AlertDialog, Button } from "@heroui/react";
+import { deleteUserAccount, updateUserAccountStatus } from '@/lib/actions/admin';
 import { toast } from 'react-toastify';
 
 export default function AdminUsersTable({ initialUsers }) {
     const [users, setUsers] = useState(initialUsers);
     const [searchQuery, setSearchQuery] = useState('');
     const [isUpdatingId, setIsUpdatingId] = useState(null);
+    const [userToDelete, setUserToDelete] = useState(null);
+    const [isDeletingId, setIsDeletingId] = useState(null);
 
     const getUserId = (user) => user?._id?.$oid || user?._id || user?.id;
 
@@ -34,6 +37,64 @@ export default function AdminUsersTable({ initialUsers }) {
             toast.error("An unexpected error occurred during state modification.");
         } finally {
             setIsUpdatingId(null);
+        }
+    };
+
+    // const handleDeleteUser = async (user) => {
+    //     const userId = getUserId(user);
+
+    //     // Safety prompt before executing a permanent database cascade purge
+    //     if (!window.confirm(`Are you sure you want to permanently delete ${user.name || 'this user'}? This will also remove their associated appointments and doctor profiles.`)) {
+    //         return;
+    //     }
+
+    //     setIsDeletingId(userId);
+    //     try {
+    //         const res = await deleteUserAccount(userId);
+    //         if (res?.success) {
+    //             toast.success("User and cascading dependencies permanently purged!");
+    //             // Remove the user from local state instantly
+    //             setUsers(prev => prev.filter(u => getUserId(u) !== userId));
+    //         } else {
+    //             toast.error(res?.message || "Failed to complete cascading user deletion.");
+    //         }
+    //     } catch (error) {
+    //         console.error("User purge process exception:", error);
+    //         toast.error("An unexpected error occurred during execution.");
+    //     } finally {
+    //         setIsDeletingId(null);
+    //     }
+    // };
+
+
+    const openDeleteModal = (user) => {
+        console.log("clicked")
+        setUserToDelete(user);
+    };
+
+    const handleConfirmDelete = async () => {
+        if (!userToDelete) return;
+        // console.log(userToDelete);
+
+        const userId = getUserId(userToDelete);
+        setIsDeletingId(userId);
+
+        // Close modal immediately so the UI remains fluid
+        setUserToDelete(null);
+
+        try {
+            const res = await deleteUserAccount(userId);
+            if (res?.success) {
+                toast.success("User permanently deleted!");
+                setUsers(prev => prev.filter(u => getUserId(u) !== userId));
+            } else {
+                toast.error(res?.message || "Failed to complete cascading user deletion.");
+            }
+        } catch (error) {
+            console.error("User purge process exception:", error);
+            toast.error("An unexpected error occurred during execution.");
+        } finally {
+            setIsDeletingId(null);
         }
     };
 
@@ -83,10 +144,10 @@ export default function AdminUsersTable({ initialUsers }) {
                             const roleBadge = formatRoleTag(user.accountRole);
                             const isSuspended = user.status === 'suspended';
                             const isLoadingRow = isUpdatingId === userId;
+                            const isDeletingRow = isDeletingId === userId;
 
                             return (
                                 <div key={userId} className="p-5 flex flex-col gap-4">
-                                    {/* Top row: avatar + name + role badge */}
                                     <div className="flex items-center justify-between gap-3">
                                         <div className="flex items-center gap-3">
                                             <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden relative shrink-0 border border-slate-100 dark:border-slate-700">
@@ -107,7 +168,6 @@ export default function AdminUsersTable({ initialUsers }) {
                                         </span>
                                     </div>
 
-                                    {/* Detail rows */}
                                     <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-xs">
                                         <div>
                                             <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-zinc-500 mb-0.5">Email</p>
@@ -119,7 +179,6 @@ export default function AdminUsersTable({ initialUsers }) {
                                         </div>
                                     </div>
 
-                                    {/* Bottom row: status badge + action button */}
                                     <div className="flex items-center justify-between pt-1">
                                         <span className={`text-[10px] font-black px-2.5 py-1 rounded-md tracking-wider uppercase ${isSuspended
                                             ? 'bg-rose-50 text-rose-600 dark:bg-rose-950/30 dark:text-rose-400 border border-rose-200 dark:border-rose-900/40'
@@ -127,18 +186,32 @@ export default function AdminUsersTable({ initialUsers }) {
                                             }`}>
                                             {user.status || 'active'}
                                         </span>
-                                        <button
-                                            disabled={isLoadingRow}
-                                            onClick={() => handleToggleStatus(user)}
-                                            className={`text-xs font-bold px-4 py-1.5 rounded-xl border transition-all duration-200 min-w-[90px] text-center inline-flex justify-center items-center ${isSuspended
-                                                ? 'border-amber-200 text-amber-600 hover:bg-amber-50 dark:border-amber-900/60 dark:text-amber-400 dark:hover:bg-amber-950/30'
-                                                : 'border-slate-200 text-slate-500 hover:bg-slate-50 hover:text-rose-600 hover:border-rose-200 dark:border-slate-700 dark:text-zinc-400 dark:hover:bg-rose-950/20 dark:hover:text-rose-400 dark:hover:border-rose-900/50'
-                                                } disabled:opacity-40`}
-                                        >
-                                            {isLoadingRow ? (
-                                                <span className="w-3.5 h-3.5 border-2 border-slate-400 border-t-transparent rounded-full animate-spin" />
-                                            ) : isSuspended ? 'Unsuspend' : 'Suspend'}
-                                        </button>
+                                        <div className="flex items-center gap-2">
+                                            <button
+                                                disabled={isLoadingRow || isDeletingRow}
+                                                onClick={() => handleToggleStatus(user)}
+                                                className={`text-xs font-bold px-4 py-1.5 rounded-xl border transition-all duration-200 min-w-[90px] text-center inline-flex justify-center items-center ${isSuspended
+                                                    ? 'border-amber-200 text-amber-600 hover:bg-amber-50 dark:border-amber-900/60 dark:text-amber-400 dark:hover:bg-amber-950/30'
+                                                    : 'border-slate-200 text-slate-500 hover:bg-slate-50 hover:text-rose-600 hover:border-rose-200 dark:border-slate-700 dark:text-zinc-400 dark:hover:bg-rose-950/20 dark:hover:text-rose-400 dark:hover:border-rose-900/50'
+                                                    } disabled:opacity-40`}
+                                            >
+                                                {isLoadingRow ? (
+                                                    <span className="w-3.5 h-3.5 border-2 border-slate-400 border-t-transparent rounded-full animate-spin" />
+                                                ) : isSuspended ? 'Unsuspend' : 'Suspend'}
+                                            </button>
+
+                                            <button
+                                                disabled={isUpdatingId === getUserId(user) || isDeletingId === getUserId(user)}
+                                                onClick={() => openDeleteModal(user)} // Opens the dialog instead of window.confirm
+                                                className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/20 border border-slate-200/80 dark:border-slate-700/80 rounded-xl transition-all duration-150"
+                                            >
+                                                {isDeletingId === getUserId(user) ? (
+                                                    <span className="w-4 h-4 border-2 border-rose-500 border-t-transparent rounded-full animate-spin" />
+                                                ) : (
+                                                    <TrashBin size={16} />
+                                                )}
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             );
@@ -147,7 +220,7 @@ export default function AdminUsersTable({ initialUsers }) {
 
                     {/* DESKTOP: Table (visible at lg and above) */}
                     <div className="hidden lg:block w-full overflow-x-auto">
-                        <table className="w-full text-left border-collapse min-w-[900px]">
+                        <table className="w-full text-left border-collapse min-w-[950px]">
                             <thead>
                                 <tr className="border-b border-slate-100 dark:border-slate-800/40 text-[11px] font-bold tracking-wider text-slate-400 dark:text-zinc-500 uppercase bg-slate-50/50 dark:bg-slate-900/10">
                                     <th className="py-4 px-6">Avatars & User</th>
@@ -155,7 +228,7 @@ export default function AdminUsersTable({ initialUsers }) {
                                     <th className="py-4 px-6">Account Email</th>
                                     <th className="py-4 px-6">Contact Phone</th>
                                     <th className="py-4 px-6">System Status</th>
-                                    <th className="py-4 px-6 text-right">Actions</th>
+                                    <th className="py-4 px-6 text-center">Actions</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-slate-100 dark:divide-slate-800/40">
@@ -164,6 +237,7 @@ export default function AdminUsersTable({ initialUsers }) {
                                     const roleBadge = formatRoleTag(user.accountRole);
                                     const isSuspended = user.status === 'suspended';
                                     const isLoadingRow = isUpdatingId === userId;
+                                    const isDeletingRow = isDeletingId === userId;
 
                                     return (
                                         <tr key={userId} className="hover:bg-slate-50/50 dark:hover:bg-slate-900/20 transition-colors duration-150">
@@ -200,19 +274,33 @@ export default function AdminUsersTable({ initialUsers }) {
                                                     {user.status || 'active'}
                                                 </span>
                                             </td>
-                                            <td className="py-4 px-6 text-right">
-                                                <button
-                                                    disabled={isLoadingRow}
-                                                    onClick={() => handleToggleStatus(user)}
-                                                    className={`text-xs font-bold px-4 py-1.5 rounded-xl border transition-all duration-200 min-w-[90px] text-center inline-flex justify-center items-center ${isSuspended
-                                                        ? 'border-amber-200 text-amber-600 hover:bg-amber-50 dark:border-amber-900/60 dark:text-amber-400 dark:hover:bg-amber-950/30'
-                                                        : 'border-slate-200 text-slate-500 hover:bg-slate-50 hover:text-rose-600 hover:border-rose-200 dark:border-slate-700 dark:text-zinc-400 dark:hover:bg-rose-950/20 dark:hover:text-rose-400 dark:hover:border-rose-900/50'
-                                                        } disabled:opacity-40`}
-                                                >
-                                                    {isLoadingRow ? (
-                                                        <span className="w-3.5 h-3.5 border-2 border-slate-400 border-t-transparent rounded-full animate-spin" />
-                                                    ) : isSuspended ? 'Unsuspend' : 'Suspend'}
-                                                </button>
+                                            <td className="py-4 px-6">
+                                                <div className="flex items-center justify-center gap-3">
+                                                    <button
+                                                        disabled={isLoadingRow || isDeletingRow}
+                                                        onClick={() => handleToggleStatus(user)}
+                                                        className={`text-xs font-bold px-4 py-1.5 rounded-xl border transition-all duration-200 min-w-[90px] text-center inline-flex justify-center items-center ${isSuspended
+                                                            ? 'border-amber-200 text-amber-600 hover:bg-amber-50 dark:border-amber-900/60 dark:text-amber-400 dark:hover:bg-amber-950/30'
+                                                            : 'border-slate-200 text-slate-500 hover:bg-slate-50 hover:text-rose-600 hover:border-rose-200 dark:border-slate-700 dark:text-zinc-400 dark:hover:bg-rose-950/20 dark:hover:text-rose-400 dark:hover:border-rose-900/50'
+                                                            } disabled:opacity-40`}
+                                                    >
+                                                        {isLoadingRow ? (
+                                                            <span className="w-3.5 h-3.5 border-2 border-slate-400 border-t-transparent rounded-full animate-spin" />
+                                                        ) : isSuspended ? 'Unsuspend' : 'Suspend'}
+                                                    </button>
+
+                                                    <button
+                                                        disabled={isUpdatingId === getUserId(user) || isDeletingId === getUserId(user)}
+                                                        onClick={() => openDeleteModal(user)} // Opens the dialog instead of window.confirm
+                                                        className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/20 border border-slate-200/80 dark:border-slate-700/80 rounded-xl transition-all duration-150"
+                                                    >
+                                                        {isDeletingId === getUserId(user) ? (
+                                                            <span className="w-4 h-4 border-2 border-rose-500 border-t-transparent rounded-full animate-spin" />
+                                                        ) : (
+                                                            <TrashBin size={16} />
+                                                        )}
+                                                    </button>
+                                                </div>
                                             </td>
                                         </tr>
                                     );
@@ -222,6 +310,43 @@ export default function AdminUsersTable({ initialUsers }) {
                     </div>
                 </>
             )}
+
+
+
+            {/* HeroUI Delete Confirmation Dialog */}
+            <AlertDialog>
+                <AlertDialog.Backdrop isOpen={userToDelete !== null}
+                    onOpenChange={(open) => {
+                        if (!open) setUserToDelete(null);
+                    }}>
+                    <AlertDialog.Container>
+                        <AlertDialog.Dialog className="sm:max-w-[400px] bg-white dark:bg-[#1a2432] border border-slate-100 dark:border-slate-800 rounded-2xl shadow-xl">
+                            <AlertDialog.CloseTrigger onClick={() => setUserToDelete(null)} />
+                            <AlertDialog.Header className="flex gap-3 items-center">
+                                <AlertDialog.Icon status="danger" />
+                                <AlertDialog.Heading className="text-slate-900 dark:text-slate-100 font-bold text-lg">
+                                    Delete Account Permanently?
+                                </AlertDialog.Heading>
+                            </AlertDialog.Header>
+                            <AlertDialog.Body className="py-3">
+                                <p className="text-sm text-slate-500 dark:text-zinc-400 leading-relaxed">
+                                    This action will permanently delete the profile account record for <strong>{userToDelete?.name || 'this user'}</strong>.
+                                    This operation clears associated ecosystem appointments and doctor profile records. This action cannot be undone.
+                                </p>
+                            </AlertDialog.Body>
+                            <AlertDialog.Footer className="flex justify-end gap-2 pt-2 border-t border-slate-50 dark:border-slate-800/60">
+                                <Button variant="tertiary" onClick={() => setUserToDelete(null)}>
+                                    Cancel
+                                </Button>
+                                <Button variant="danger" onClick={handleConfirmDelete}>
+                                    Delete Account
+                                </Button>
+                            </AlertDialog.Footer>
+                        </AlertDialog.Dialog>
+                    </AlertDialog.Container>
+                </AlertDialog.Backdrop>
+            </AlertDialog>
+
         </div>
     );
 }
