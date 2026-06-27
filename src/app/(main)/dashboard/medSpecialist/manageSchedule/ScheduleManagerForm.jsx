@@ -38,7 +38,7 @@ export default function ScheduleManagerForm({ userId, initialDays, initialSlots 
         if (!dayValue) return;
 
         if (days.includes(dayValue)) {
-            alert(`${dayValue} is already configured.`);
+            toast.warning(`${dayValue} is already configured.`);
             return;
         }
         setDays([...days, dayValue]);

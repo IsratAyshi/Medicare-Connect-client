@@ -28,7 +28,7 @@ const DashboardSidebar = async () => {
         { name: 'Manage Users', href: '/dashboard/admin/manageUsers', icon: 'UsersRound' },
         { name: 'Verify Doctors', href: '/dashboard/admin/doctorsList', icon: 'CircleCheck' },
         { name: 'Appointments Registry', href: '/dashboard/admin/appointmentsReg', icon: 'CalendarDays' },
-        { name: 'Stripe Cash Flow', href: '/dashboard/admin/allPayments', icon: 'CiBadgeDollar' },
+        { name: 'Stripe Cash Flow', href: '/dashboard/admin/cashFlow', icon: 'CiBadgeDollar' },
     ];
 
     const sidebarLinksMap = {

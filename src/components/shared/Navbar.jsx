@@ -114,7 +114,7 @@ export default function Navbar() {
                         {
                             isPending ?
                                 (
-                                    <h2>Loading</h2>
+                                    <div className="h-[42px] w-32 rounded-lg bg-slate-200 dark:bg-slate-700 animate-pulse" />
                                 )
                                 :
                                 user ?

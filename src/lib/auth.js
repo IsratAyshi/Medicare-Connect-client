@@ -24,8 +24,8 @@ export const auth = betterAuth({
                 const isMedSpec = callbackURL.includes("medical-specialist");
 
                 return {
-                    accountRole: isMedSpec ? "medical_specialist" : "patient_family",
-                    // accountRole: "patient_family",
+                    // accountRole: isMedSpec ? "medical_specialist" : "patient_family",
+                    accountRole: "patient_family",
                     gender: "other",
                     status: "active",
                 };

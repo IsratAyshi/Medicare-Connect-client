@@ -4,9 +4,9 @@ import { StatsCard } from './StatsCard';
 
 export const DashboardStats = ({ statsData = [] }) => {
     return (
-        <div className="w-full max-w-5xl mx-auto p-4">
+        <div className="w-full max-w-[1200px] mx-auto p-4">
             {/* Responsive Grid layout */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
                 {statsData.map((stat, index) => (
                     <StatsCard
                         key={stat.id || index}

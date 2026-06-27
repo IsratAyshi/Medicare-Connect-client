@@ -2,15 +2,21 @@
 
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
-import { serverMutation } from "@/lib/core/server";
-
+// import { serverMutation } from "@/lib/core/server";
+import { clientMutation } from '@/lib/core/client-fetch';
 import { Select, Label, ListBox } from "@heroui/react";
+import { useSession } from '@/lib/auth-client';
 
 export default function ReviewForm({ patientId, distinctDoctors, onClose, onReviewPublished }) {
+
+    const { data: session } = useSession();
+    const sessionToken = session?.session?.token || null;
+
     const [selectedDoctorId, setSelectedDoctorId] = useState("");
     const [selectedRating, setSelectedRating] = useState("5");
     const [commentText, setCommentText] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
+
 
     const handlePublishFeedback = async (e) => {
         e.preventDefault();
@@ -19,12 +25,12 @@ export default function ReviewForm({ patientId, distinctDoctors, onClose, onRevi
 
         setIsSubmitting(true);
         try {
-            const result = await serverMutation("/api/reviews", {
+            const result = await clientMutation("/api/reviews", {
                 patientId,
                 doctorId: selectedDoctorId,
                 rating: Number(selectedRating),
                 reviewText: commentText
-            });
+            }, sessionToken);
 
             if (result?.success) {
                 toast.success("Feedback profile record published successfully!");

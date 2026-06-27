@@ -9,3 +9,11 @@ export const getOverviewStats = async () => {
         return { totalDoctors: 0, totalPatients: 0, appointmentsCount: 0, totalReviews: 0 };
     }
 };
+
+
+export async function getTopPublicReviews() {
+
+    const result = await publicServerFetch("/api/public/top-reviews");
+    return result?.data || [];
+    
+}

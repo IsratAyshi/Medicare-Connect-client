@@ -1,4 +1,3 @@
-// app/(main)/dashboard/admin/appointmentsReg/page.jsx
 import { getSystemClinicalRegister } from "@/lib/api/admin";
 import React from "react";
 import ClinicalRegisterTable from "./ClinicalRegisterTable";
@@ -9,10 +8,8 @@ export const metadata = {
 };
 
 export default async function AdminAppointmentsRegistryPage() {
-    // Directly trigger secure server load prior to hydration
     const registerRecords = await getSystemClinicalRegister();
 
-    // console.log("ADMIN PAGE API RESPONSE:", registerRecords);
 
     return (
         <div className="p-6 space-y-6 bg-[#f8f9ff] dark:bg-[#0D1C2D]">

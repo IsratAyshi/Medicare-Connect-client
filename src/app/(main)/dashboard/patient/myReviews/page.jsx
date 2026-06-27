@@ -15,26 +15,28 @@ export default function PatientMyReviewsPage() {
     const { data: session } = useSession();
     const patientId = session?.user?.id || session?.user?._id;
 
+    const sessionToken = session?.session?.token || null;
+
     const [reviews, setReviews] = useState([]);
     const [distinctDoctors, setDistinctDoctors] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [isFormOpen, setIsFormOpen] = useState(false);
 
     const refreshReviewsList = async () => {
-        if (!patientId) return;
-        const updatedReviews = await getPatientReviews(patientId);
+        if (!patientId || !sessionToken) return;
+        const updatedReviews = await getPatientReviews(patientId, sessionToken);
         setReviews(updatedReviews);
     };
 
     useEffect(() => {
-        if (!patientId) return;
+        if (!patientId || !sessionToken) return;
 
         async function loadReviewWorkspace() {
             try {
-                const reviewsData = await getPatientReviews(patientId);
+                const reviewsData = await getPatientReviews(patientId, sessionToken);
                 setReviews(reviewsData);
 
-                const appointmentsData = await getPatientVisitedDoctors(patientId);
+                const appointmentsData = await getPatientVisitedDoctors(patientId, sessionToken);
                 const uniqueDocs = [];
                 const seen = new Set();
 
@@ -58,7 +60,7 @@ export default function PatientMyReviewsPage() {
             }
         }
         loadReviewWorkspace();
-    }, [patientId]);
+    }, [patientId, sessionToken]);
 
     if (isLoading) {
         return (

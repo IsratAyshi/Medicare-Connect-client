@@ -23,6 +23,7 @@ export const serverFetch = async (path, options = {}) => {
     return handleStatusCode(res);
 }
 
+
 export const publicServerFetch = async(path, options = {}) =>{
     const res = await fetch(`${baseUrl}${path}`, {
         ...options,

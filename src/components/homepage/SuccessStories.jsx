@@ -1,4 +1,5 @@
-import { getTopPublicReviews } from '@/lib/api/reviews';
+
+import { getTopPublicReviews } from '@/lib/api/stats';
 import Image from 'next/image';
 import { FaStar } from 'react-icons/fa6';
 

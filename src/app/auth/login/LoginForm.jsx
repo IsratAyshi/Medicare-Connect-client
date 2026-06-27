@@ -74,22 +74,6 @@ export default function LoginForm({ redirectTo = "/" }) {
     };
 
     // Google SSO Handler
-    // const handleGoogleSignIn = async () => {
-    //     setError("");
-    //     setIsGoogleLoading(true);
-    //     try {
-    //         await authClient.signIn.social({
-    //             provider: "google",
-    //             callbackURL: redirectTo
-    //         });
-    //     } catch (err) {
-    //         console.error(err);
-    //         setError("Failed to initialize Google authentication.");
-    //         setIsGoogleLoading(false);
-    //     }
-    // };
-
-    // Patient Google SSO Handler (Uses defaults from auth.js mapProfileToUser)
     const handleGoogleSignIn = async () => {
         setError("");
         setIsGoogleLoading(true);
@@ -105,25 +89,41 @@ export default function LoginForm({ redirectTo = "/" }) {
         }
     };
 
-    // Doctor Google SSO Handler (Overrides defaults explicitly)
-    const handleDoctorGoogleSignIn = async () => {
-        setError("");
-        setIsDoctorGoogleLoading(true);
-        try {
-            await authClient.signIn.social({
-                provider: "google",
-                callbackURL: redirectTo,
-                // callbackURL: `/auth/callback/medical-specialist?redirectTo=${encodeURIComponent(redirectTo)}`
-                // newUserOptions: {
-                //     accountRole: "medical_specialist"
-                // }
-            });
-        } catch (err) {
-            console.error(err);
-            setError("Failed to initialize Medical Specialist authorization workflow.");
-            setIsDoctorGoogleLoading(false);
-        }
-    };
+    // Patient Google SSO Handler (Uses defaults from auth.js mapProfileToUser)
+    // const handleGoogleSignIn = async () => {
+    //     setError("");
+    //     setIsGoogleLoading(true);
+    //     try {
+    //         await authClient.signIn.social({
+    //             provider: "google",
+    //             callbackURL: redirectTo
+    //         });
+    //     } catch (err) {
+    //         console.error(err);
+    //         setError("Failed to initialize Google authentication.");
+    //         setIsGoogleLoading(false);
+    //     }
+    // };
+
+    // // Doctor Google SSO Handler (Overrides defaults explicitly)
+    // const handleDoctorGoogleSignIn = async () => {
+    //     setError("");
+    //     setIsDoctorGoogleLoading(true);
+    //     try {
+    //         await authClient.signIn.social({
+    //             provider: "google",
+    //             callbackURL: redirectTo,
+    //             // callbackURL: `/auth/callback/medical-specialist?redirectTo=${encodeURIComponent(redirectTo)}`
+    //             // newUserOptions: {
+    //             //     accountRole: "medical_specialist"
+    //             // }
+    //         });
+    //     } catch (err) {
+    //         console.error(err);
+    //         setError("Failed to initialize Medical Specialist authorization workflow.");
+    //         setIsDoctorGoogleLoading(false);
+    //     }
+    // };
 
 
     return (
@@ -215,7 +215,7 @@ export default function LoginForm({ redirectTo = "/" }) {
                 </div>
 
                 {/* Google OAuth Custom Button */}
-                {/* <Button
+                <Button
                     type="button"
                     onClick={handleGoogleSignIn}
                     isLoading={isGoogleLoading}
@@ -231,12 +231,12 @@ export default function LoginForm({ redirectTo = "/" }) {
                         </svg>
                     )}
                     Log In with Google Account
-                </Button> */}
+                </Button>
 
 
                 {/* Google Sign-In Selection Block */}
-                <div className="flex flex-col sm:flex-row gap-3 w-full pb-5">
-                    {/* Patient OAuth Button */}
+                {/* <div className="flex flex-col sm:flex-row gap-3 w-full pb-5">
+                    {/* Patient OAuth Button 
                     <Button
                         type="button"
                         onClick={handleGoogleSignIn}
@@ -255,7 +255,7 @@ export default function LoginForm({ redirectTo = "/" }) {
                         Patient Sign-In
                     </Button>
 
-                    {/* Medical Specialist OAuth Button */}
+                    {/* Medical Specialist OAuth Button 
                     <Button
                         type="button"
                         onClick={handleDoctorGoogleSignIn}
@@ -273,7 +273,7 @@ export default function LoginForm({ redirectTo = "/" }) {
                         )}
                         Med Specialist Sign-In
                     </Button>
-                </div>
+                </div> */}
 
 
 
