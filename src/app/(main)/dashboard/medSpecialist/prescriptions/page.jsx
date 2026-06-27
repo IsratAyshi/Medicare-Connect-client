@@ -1,15 +1,18 @@
-// dashboard/medSpecialist/prescriptions/page.jsx
+
 import React from 'react';
 
 import { getUserSession } from '@/lib/core/session';
 import { getDoctorPrescriptions, getSinglePatientRecord } from '@/lib/api/doctors';
 import PrescriptionForm from '@/components/doctors/PrescriptionForm';
+import EditPrescriptionForm from '@/components/doctors/EditPrescriptionForm';
+import Link from 'next/link';
 
 
 export default async function PrescriptionsCabinPage({ searchParams }) {
 
     const params = await searchParams;
     const openFormView = params?.action === 'create';
+    const openEditView = params?.action === 'edit' && params?.rxId;
 
     const user = await getUserSession();
     const doctorId = user?.id || user?._id;
@@ -19,6 +22,14 @@ export default async function PrescriptionsCabinPage({ searchParams }) {
         getDoctorPrescriptions(doctorId),
         openFormView ? getSinglePatientRecord(params?.patientId) : null
     ]);
+
+    // Track data records if editing state payload triggers true
+    let editingRxData = null;
+    if (openEditView && prescriptions.length > 0) {
+        editingRxData = prescriptions.find(
+            (rx) => (rx._id?.$oid || rx._id) === params.rxId
+        );
+    }
 
     return (
         <div className="min-h-screen bg-white dark:bg-[rgb(24,34,47)] py-12 px-6 transition-colors duration-200">
@@ -34,6 +45,19 @@ export default async function PrescriptionsCabinPage({ searchParams }) {
                         patientId={params?.patientId}
                         patientName={targetPatient?.name || "Verified Patient"}
                         doctorId={doctorId}
+                    />
+                )}
+
+                {/* Form Injection Area for Editing Existing Prescriptions */}
+                {openEditView && editingRxData && (
+                    <EditPrescriptionForm
+                        rxId={params.rxId}
+                        patientName={editingRxData.patient?.name || "Verified Patient"}
+                        initialData={{
+                            diagnosis: editingRxData.diagnosis,
+                            medications: editingRxData.medications,
+                            notes: editingRxData.notes
+                        }}
                     />
                 )}
 
@@ -62,9 +86,12 @@ export default async function PrescriptionsCabinPage({ searchParams }) {
                                                 Date of Issue: {dateString}
                                             </p>
                                         </div>
-                                        <button className="border border-slate-200 dark:border-zinc-800 hover:bg-slate-50 text-slate-600 dark:text-zinc-300 font-bold text-xs px-3 py-1.5 rounded-xl transition-all">
+                                        <Link
+                                            href={`/dashboard/medSpecialist/prescriptions?action=edit&rxId=${rxId}`}
+                                            className="border border-slate-200 dark:border-zinc-800 hover:bg-slate-50 dark:hover:bg-zinc-800/60 bg-white dark:bg-zinc-900 text-slate-600 dark:text-zinc-300 font-bold text-xs px-3 py-1.5 rounded-xl transition-all block"
+                                        >
                                             Modify Rx
-                                        </button>
+                                        </Link>
                                     </div>
 
                                     <div className="text-xs space-y-2 pt-2 border-t border-slate-100 dark:border-zinc-800/80">

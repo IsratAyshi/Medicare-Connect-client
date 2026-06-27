@@ -2,7 +2,7 @@
 
 
 import { revalidatePath } from "next/cache";
-import { serverMutation } from "../core/server";
+import { serverFetch, serverMutation } from "../core/server";
 import { stripe } from "../stripe";
 
 
@@ -67,3 +67,23 @@ export async function updateAppointmentStatusAction(appointmentId, nextStatus) {
         return { success: false, error: error.message };
     }
 }
+
+
+export const getDoctorSchedule = async (doctorId) => {
+    const path = `/api/doctors/${doctorId}/schedule`;
+    const result = await serverFetch(path);
+
+    return result?.data || [];
+};
+
+
+export const rescheduleAppointment = async (appointmentId, rescheduleData) => {
+    const path = `/api/appointments/${appointmentId}/reschedule`;
+    const method = 'PATCH';
+
+    const response = await serverMutation(path, rescheduleData, method);
+    
+    revalidatePath('/dashboard/patient/myAppointments');
+    
+    return response;
+};

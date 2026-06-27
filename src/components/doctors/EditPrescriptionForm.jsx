@@ -2,29 +2,37 @@
 
 import React, { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
-import { issuePrescriptionAction } from '@/lib/actions/prescriptions';
+import { updatePrescriptionAction } from '@/lib/actions/prescriptions';
+import { toast } from 'react-toastify';
 
-export default function PrescriptionForm({ appointmentId, patientId, patientName, doctorId }) {
+
+export default function EditPrescriptionForm({ rxId, initialData, patientName }) {
     const router = useRouter();
     const [isPending, startTransition] = useTransition();
-    const [form, setForm] = useState({ diagnosis: '', medications: '', notes: '' });
+
+    const [form, setForm] = useState({
+        diagnosis: initialData?.diagnosis || '',
+        medications: initialData?.medications || '',
+        notes: initialData?.notes || ''
+    });
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         startTransition(async () => {
-            const payload = { doctorId, patientId, appointmentId, ...form };
-            const res = await issuePrescriptionAction(payload);
+            const res = await updatePrescriptionAction(rxId, form);
             if (res.success) {
-                router.push('/dashboard/medSpecialist/prescriptions'); // return to default view
+                // Clear query parameters out of the active view matrix route cleanly
+                toast.success("Prescription updated successfully!");
+                router.push('/dashboard/medSpecialist/prescriptions');
             }
         });
     };
 
     return (
-        <div className="bg-[#f4f9f5] dark:bg-zinc-950 border border-blue-100 dark:border-blue-950 p-6 rounded-2xl space-y-5 shadow-sm">
-            <div className="flex justify-between items-center border-b border-blue-100/60 dark:border-blue-950/40 pb-3">
-                <h2 className="text-lg font-bold text-slate-800 dark:text-blue-400">Generate Digital Rx</h2>
-                <span className="bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 text-xs font-bold px-2.5 py-1 rounded-md">
+        <div className="bg-[#fcfaff] dark:bg-zinc-950 border border-purple-100 dark:border-purple-950/40 p-6 rounded-2xl space-y-5 shadow-sm animate-in fade-in-50 duration-200">
+            <div className="flex justify-between items-center border-b border-purple-100/60 dark:border-purple-950/40 pb-3">
+                <h2 className="text-lg font-bold text-purple-900 dark:text-purple-400">Modify Existing Prescription (Rx)</h2>
+                <span className="bg-purple-50 dark:bg-zinc-900 text-purple-700 dark:text-zinc-300 text-xs font-bold px-2.5 py-1 rounded-md">
                     Patient: <span className="text-[#00458F] dark:text-[#3B82F1] font-bold">{patientName}</span>
                 </span>
             </div>
@@ -38,7 +46,7 @@ export default function PrescriptionForm({ appointmentId, patientId, patientName
                         placeholder="e.g., Essential Hypertension, Viral Gastroenteritis"
                         value={form.diagnosis}
                         onChange={e => setForm({ ...form, diagnosis: e.target.value })}
-                        className="w-full text-sm px-4 py-2.5 rounded-xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 focus:outline-none focus:border-blue-500 transition-colors"
+                        className="w-full text-sm px-4 py-2.5 rounded-xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 focus:outline-none focus:border-purple-500 transition-colors"
                     />
                 </div>
 
@@ -50,7 +58,7 @@ export default function PrescriptionForm({ appointmentId, patientId, patientName
                         placeholder="e.g., Cetirizine 10mg at bedtime for 5 days, Vitamin D3 once weekly"
                         value={form.medications}
                         onChange={e => setForm({ ...form, medications: e.target.value })}
-                        className="w-full text-sm px-4 py-2.5 rounded-xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 focus:outline-none focus:border-blue-500 transition-colors resize-none"
+                        className="w-full text-sm px-4 py-2.5 rounded-xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 focus:outline-none focus:border-purple-500 transition-colors resize-none"
                     />
                 </div>
 
@@ -61,7 +69,7 @@ export default function PrescriptionForm({ appointmentId, patientId, patientName
                         placeholder="e.g., Maintain a balanced diet, avoid smoking, and seek immediate care if symptoms worsen."
                         value={form.notes}
                         onChange={e => setForm({ ...form, notes: e.target.value })}
-                        className="w-full text-sm px-4 py-2.5 rounded-xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 focus:outline-none focus:border-blue-500 transition-colors resize-none"
+                        className="w-full text-sm px-4 py-2.5 rounded-xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 focus:outline-none focus:border-purple-500 transition-colors resize-none"
                     />
                 </div>
 
@@ -76,9 +84,9 @@ export default function PrescriptionForm({ appointmentId, patientId, patientName
                     <button
                         disabled={isPending}
                         type="submit"
-                        className="px-5 py-2 text-xs font-bold text-white bg-[#00458F] hover:bg-[#002F66] rounded-xl shadow-sm transition-all disabled:opacity-50"
+                        className="px-5 py-2 text-xs font-bold text-white bg-purple-700 hover:bg-purple-800 rounded-xl shadow-sm transition-all disabled:opacity-50"
                     >
-                        {isPending ? "Issuing..." : "Issue Digital Prescription"}
+                        {isPending ? "Saving Revisions..." : "Save Revisions"}
                     </button>
                 </div>
             </form>

@@ -60,3 +60,16 @@ export async function getSinglePatientRecord(patientId) {
     return result?.data || null;
     
 }
+
+
+export async function getDoctorDashboardStats(doctorId) {
+    if (!doctorId) {
+        return { totalPatients: 0, todayAppointments: 0, reviewsReceived: 0 };
+    }
+
+    const result = await serverFetch(`/api/doctor/stats/${doctorId}`);
+
+    // console.log("getDoctorDashboardStats result:", result);
+
+    return result?.data || { totalPatients: 0, todayAppointments: 0, reviewsReceived: 0 };
+}

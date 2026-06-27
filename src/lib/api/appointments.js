@@ -9,6 +9,7 @@ export async function getPatientAppointments(patientId) {
     
 }
 
+
 // export async function getPatientAppointments(patientId) {
 //     // Edge case: If the user session didn't return an ID, don't attempt the call
 //     if (!patientId) {

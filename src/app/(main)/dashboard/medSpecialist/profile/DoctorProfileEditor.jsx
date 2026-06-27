@@ -16,6 +16,7 @@ import { ChevronDown } from '@gravity-ui/icons';
 import { updateDoctorProfile } from '@/lib/actions/doctors';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 const textInputClass = "w-full bg-slate-50 dark:bg-[#1a2635] border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 rounded-lg px-3 py-2.5 outline-none placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:border-emerald-600 dark:focus:border-emerald-500 transition";
 const selectBoxClass = "w-full flex flex-col gap-1";
@@ -35,7 +36,8 @@ export default function DoctorProfileEditor({ user, existingProfile }) {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
 
-        const specialization = formData.get('specialization');
+        // const specialization = formData.get('specialization');
+        const specialization = formData.get('specialization') || existingProfile?.specialization;
         const experience = formData.get('experience');
         const qualifications = formData.get('qualifications');
         const consultationFee = formData.get('consultationFee');
@@ -110,15 +112,17 @@ export default function DoctorProfileEditor({ user, existingProfile }) {
             <div className="max-w-3xl mx-auto bg-[#ECF0FF] dark:bg-[#001B3F] border border-slate-100 dark:border-slate-800/60 rounded-xl p-8 shadow-sm space-y-6">
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-6 border-b border-slate-100 dark:border-slate-800">
                     <div className="flex items-center gap-4">
-                        <img
+                        <Image
                             src={profile.profileImage || "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=300"}
                             alt={profile.doctorName}
-                            className="w-18 h-18 rounded-xl object-cover ring-2 ring-emerald-500/20"
+                            width={100}
+                            height={100}
+                            className="w-18 h-18 rounded-xl object-cover ring-2 ring-blue-500/20"
                         />
                         <div>
                             <h1 className="text-xl font-bold text-slate-800 dark:text-slate-100">{profile.doctorName}</h1>
                             <p className="text-sm text-emerald-600 dark:text-emerald-400 font-medium">{profile.specialization} Specialist</p>
-                            <div className="flex items-center gap-1.5 text-sm text-slate-600 dark:text-slate-300">
+                            <div className="flex items-center gap-1.5 mt-2 text-sm text-slate-600 dark:text-slate-300">
                                 <span>Verification:</span>
                                 <span className={`
             px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider border select-none
@@ -164,7 +168,7 @@ export default function DoctorProfileEditor({ user, existingProfile }) {
                     {/* ROW 1: Clinical Specialties + Experience */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                         <Select className={selectBoxClass} name="specialization" defaultSelectedKeys={[profile?.specialization || 'Cardiology']}>
-                            <Label className="text-slate-500 dark:text-slate-400 font-semibold text-xs uppercase tracking-wider">Clinical Specialty</Label>
+                            <Label className="text-slate-500 dark:text-slate-400 font-semibold text-xs uppercase tracking-wider">Medical Specialty</Label>
                             <Select.Trigger className={triggerClasses}>
                                 <Select.Value className="text-slate-800 dark:text-slate-100" />
                                 <Select.Indicator><ChevronDown size={16} className="text-slate-400" /></Select.Indicator>

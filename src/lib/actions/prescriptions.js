@@ -19,3 +19,20 @@ export async function issuePrescriptionAction(payload) {
         return { success: false, error: error.message };
     }
 }
+
+
+export async function updatePrescriptionAction(rxId, payload) {
+    try {
+        const result = await serverMutation(
+            `/api/doctor/prescriptions/modify/${rxId}`,
+            payload,
+            "PATCH"
+        );
+        
+        revalidatePath("/dashboard/medSpecialist/prescriptions");
+        return result;
+    } catch (error) {
+        console.error("Action pipeline failed to modify targeted prescription:", error);
+        return { success: false, error: error.message };
+    }
+}

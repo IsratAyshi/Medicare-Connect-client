@@ -17,8 +17,8 @@ export default async function DoctorAppointmentsPage() {
                 {/* Header Profile Section */}
                 <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-b border-slate-200 dark:border-zinc-800 pb-5">
                     <div>
-                        <h1 className="text-3xl font-black text-slate-800 dark:text-white tracking-tight">
-                            Scheduled Appointment Inbox
+                        <h1 className="text-3xl font-bold text-[#0D1C2D] dark:text-white tracking-tight">
+                            Scheduled Paid Appointments Inbox
                         </h1>
                         <p className="text-sm text-slate-500 dark:text-zinc-400 mt-1">
                             Review requests, confirm consultation setups, and log diagnosis updates.
