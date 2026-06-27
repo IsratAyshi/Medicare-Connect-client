@@ -2,9 +2,10 @@
 "use client";
 
 import React, { useState } from 'react';
-import { Button, Modal, useOverlayState } from '@heroui/react';
+import { AlertDialog, Button, Modal, useOverlayState } from '@heroui/react';
 import { handlePayNow } from '@/lib/actions/appointments-client';
-import { getDoctorSchedule, rescheduleAppointment } from '@/lib/actions/appointments';
+import { cancelAppointment, getDoctorSchedule, rescheduleAppointment } from '@/lib/actions/appointments';
+import { toast } from 'react-toastify';
 
 
 export default function ActionButtons({ appointment, isPaid }) {
@@ -14,6 +15,9 @@ export default function ActionButtons({ appointment, isPaid }) {
 
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isLoadingSchedule, setIsLoadingSchedule] = useState(false);
+    const [isCanceling, setIsCanceling] = useState(false);
+
+    const [appointmentToCancel, setAppointmentToCancel] = useState(null);
 
     // Core Doctor Schedule States
     const [availableDays, setAvailableDays] = useState([]);
@@ -76,6 +80,27 @@ export default function ActionButtons({ appointment, isPaid }) {
         }
     };
 
+    const handleConfirmCancel = async () => {
+        if (!appointmentToCancel) return;
+
+        setIsCanceling(true);
+        try {
+            const res = await cancelAppointment(appointmentId);
+            if (res?.success) {
+                setAppointmentToCancel(null); // Close the AlertDialog on success
+                toast.success("The appointment has been canceled.");
+            } else {
+                toast.error(res?.message || "Failed to cancel the appointment.");
+            }
+        } catch (error) {
+            console.error("Cancellation flow encountered an error:", error);
+            toast.error("A network modification exception occurred while canceling.");
+        } finally {
+            setIsCanceling(false);
+        }
+    };
+
+
     return (
         <div className="flex items-center gap-2 w-full justify-end">
             {!isPaid && (
@@ -87,12 +112,12 @@ export default function ActionButtons({ appointment, isPaid }) {
                 </button>
             )}
 
-            {/* Reschedule Button - Now runs the optimized handler function */}
+            {/* Reschedule Button */}
             <Button
                 size="sm"
                 variant="bordered"
                 onClick={handleOpenModal}
-                className="text-slate-600 dark:text-zinc-300 border-slate-200 dark:border-zinc-700 font-semibold text-xs px-4 py-2.5 rounded-xl h-auto"
+                className="text-slate-600 bg-purple-100 dark:bg-purple-900/20 dark:text-zinc-300 border-slate-200 dark:border-zinc-700 font-semibold text-xs px-4 py-2.5 rounded-xl h-auto"
             >
                 Reschedule
             </Button>
@@ -100,13 +125,14 @@ export default function ActionButtons({ appointment, isPaid }) {
             <Button
                 size="sm"
                 variant="bordered"
+                onClick={() => setAppointmentToCancel(appointment)}
+                disabled={isCanceling || isSubmitting}
                 className="text-rose-500 border-rose-200 dark:border-rose-950/60 font-semibold text-xs px-4 py-2.5 rounded-xl h-auto hover:bg-rose-50/50 dark:hover:bg-rose-950/20"
             >
                 Cancel
             </Button>
 
             {/* HeroUI Reschedule Modal Container Block */}
-
             {/* <Modal open={isOpen} onClose={() => setIsOpen(false)}>
              */}
             <Modal state={modalState}>
@@ -129,7 +155,7 @@ export default function ActionButtons({ appointment, isPaid }) {
                                 {availableDays.length > 0 && (
                                     <div className="mt-3 inline-flex flex-wrap gap-1.5 items-center bg-slate-50 dark:bg-zinc-800/60 px-3 py-1.5 rounded-xl border border-slate-100 dark:border-zinc-800/80 w-full">
                                         <span className="text-[11px] font-bold text-slate-400 dark:text-zinc-500 uppercase tracking-wider">Weekly Days:</span>
-                                        <span className="text-xs font-semibold text-[#1e533c] dark:text-emerald-400">
+                                        <span className="text-xs font-semibold text-[#002F66] dark:text-emerald-400">
                                             {availableDays.join(', ')}
                                         </span>
                                     </div>
@@ -189,7 +215,7 @@ export default function ActionButtons({ appointment, isPaid }) {
                                     <Button
                                         type="submit"
                                         disabled={isSubmitting || isLoadingSchedule || availableSlots.length === 0}
-                                        className="bg-[#1e533c] hover:bg-[#163e2c] text-white font-semibold text-xs px-5 py-2 rounded-xl h-auto transition-all shadow-sm disabled:opacity-50"
+                                        className="bg-[#00458F] hover:bg-[#002F66] text-white font-semibold text-xs px-5 py-2 rounded-xl h-auto transition-all shadow-sm disabled:opacity-50"
                                     >
                                         {isSubmitting ? "Updating..." : "Reschedule"}
                                     </Button>
@@ -199,6 +225,66 @@ export default function ActionButtons({ appointment, isPaid }) {
                     </Modal.Container>
                 </Modal.Backdrop>
             </Modal>
+
+
+
+            {/* --- HeroUI Cancellation Confirmation Alert Dialog Layout --- */}
+            <AlertDialog>
+                <AlertDialog.Backdrop
+                    isOpen={appointmentToCancel !== null}
+                    onOpenChange={(open) => {
+                        if (!open) setAppointmentToCancel(null);
+                    }}
+                >
+                    <AlertDialog.Container>
+                        <AlertDialog.Dialog className="sm:max-w-[420px] bg-white dark:bg-[#1a2432] border border-slate-100 dark:border-slate-800 rounded-2xl shadow-xl">
+                            <AlertDialog.CloseTrigger onClick={() => setAppointmentToCancel(null)} />
+
+                            <AlertDialog.Header className="flex gap-3 items-center">
+                                <AlertDialog.Icon status="danger" />
+                                <AlertDialog.Heading className="text-slate-900 dark:text-slate-100 font-bold text-lg">
+                                    Cancel Appointment?
+                                </AlertDialog.Heading>
+                            </AlertDialog.Header>
+
+                            <AlertDialog.Body className="py-3">
+                                <p className="text-sm text-slate-500 dark:text-zinc-400 leading-relaxed">
+                                    Are you sure you want to cancel the appointment scheduled for
+                                    <strong> {appointmentToCancel?.appointmentDate}</strong> at
+                                    <strong> {appointmentToCancel?.appointmentTime}</strong>?
+                                </p>
+                                {appointmentToCancel?.paymentStatus === 'paid' && (
+                                    <div className="mt-2.5 p-3 rounded-xl bg-amber-50/80 dark:bg-amber-950/20 border border-amber-200/60 dark:border-amber-900/40">
+                                        <p className="text-xs font-semibold text-amber-700 dark:text-amber-400">
+                                            ⚠️ Detected Paid Appointment. Proceeding will result in a refund.
+                                        </p>
+                                    </div>
+                                )}
+                                <p className="mt-3 text-xs text-slate-400 dark:text-zinc-500">
+                                    This data tracking purge layer operations are destructive and cannot be reversed.
+                                </p>
+                            </AlertDialog.Body>
+
+                            <AlertDialog.Footer className="flex justify-end gap-2 pt-2 border-t border-slate-50 dark:border-slate-800/60">
+                                <Button
+                                    variant="tertiary"
+                                    disabled={isCanceling}
+                                    onClick={() => setAppointmentToCancel(null)}
+                                >
+                                    Go Back
+                                </Button>
+                                <Button
+                                    variant="danger"
+                                    disabled={isCanceling}
+                                    onClick={handleConfirmCancel}
+                                >
+                                    {isCanceling ? "Canceling..." : "Confirm Cancellation"}
+                                </Button>
+                            </AlertDialog.Footer>
+                        </AlertDialog.Dialog>
+                    </AlertDialog.Container>
+                </AlertDialog.Backdrop>
+            </AlertDialog>
 
         </div>
     );

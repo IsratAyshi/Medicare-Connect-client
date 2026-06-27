@@ -87,3 +87,15 @@ export const rescheduleAppointment = async (appointmentId, rescheduleData) => {
     
     return response;
 };
+
+
+export const cancelAppointment = async (appointmentId) => {
+    const path = `/api/appointments/${appointmentId}`;
+    const method = 'DELETE';
+
+    const response = await serverMutation(path, {}, method);
+    
+    revalidatePath('/dashboard/patient/myAppointments');
+    
+    return response;
+};
